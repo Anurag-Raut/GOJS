@@ -1,9 +1,15 @@
 
+
+#ifndef TOKEN_H
+#define TOKEN_H
+
+#include <any>
 #include <optional>
+#include <string>
 #include <unordered_map>
 #include <variant>
 #include <vector>
-
+using namespace std;
 enum TokenType {
   LEFT_PAREN,
   RIGHT_PAREN,
@@ -58,13 +64,25 @@ std::unordered_map<std::string, TokenType> KEYWORDS = {
 
 class Literal {
  public:
-  using ValueType = variant<string, double, bool, int>;
-  optional<ValueType> value;
+  any value;
 
   Literal(const string& s) : value(s) {}
   Literal(double d) : value(d) {}
   Literal(bool b) : value(b) {}
   Literal() : value(nullopt) {}
+
+  void printLiteral() {
+    if (value.type() == typeid(string)) {
+      cout << any_cast<string>(value) << endl;
+    } else if (value.type() == typeid(double)) {
+      cout << any_cast<double>(value) << endl;
+    } else if (value.type() == typeid(bool)) {
+      cout << any_cast<bool>(value) << endl;
+    } else {
+      cout << "Unkn own type" << endl;
+    }
+  }
+
 };
 
 class Token {
@@ -81,5 +99,6 @@ class Token {
     this->line = line;
   }
 
-
+  Token() = default;
 };
+#endif

@@ -224,10 +224,41 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/optional \
   /usr/include/c++/11/variant \
   /usr/include/c++/11/bits/parse_numbers.h \
-  ../utils.cpp
+  ../utils.hpp \
+  ../token.hpp \
+  /usr/include/c++/11/any \
+  ../parser.cpp \
+  /usr/include/c++/11/memory \
+  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/11/bits/align.h \
+  /usr/include/c++/11/bit \
+  /usr/include/c++/11/bits/unique_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr.h \
+  /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/allocated_ptr.h \
+  /usr/include/c++/11/ext/concurrence.h \
+  /usr/include/c++/11/bits/shared_ptr_atomic.h \
+  /usr/include/c++/11/bits/atomic_base.h \
+  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/11/backward/auto_ptr.h \
+  /usr/include/c++/11/pstl/glue_memory_defs.h \
+  ../expr.hpp \
+  ../interpreter.cpp
 
 
-../utils.cpp:
+../interpreter.cpp:
+
+/usr/include/c++/11/bits/stl_raw_storage_iter.h:
+
+/usr/include/c++/11/memory:
+
+../parser.cpp:
+
+/usr/include/c++/11/any:
+
+../token.hpp:
+
+/usr/include/c++/11/bits/shared_ptr_atomic.h:
 
 /usr/include/c++/11/bits/parse_numbers.h:
 
@@ -242,6 +273,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h:
 
 /usr/include/c++/11/bits/istream.tcc:
+
+/usr/include/c++/11/bits/unique_ptr.h:
 
 /usr/include/c++/11/ostream:
 
@@ -258,6 +291,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/bits/locale_facets.h:
 
 /usr/include/c++/11/bits/basic_ios.h:
+
+/usr/include/c++/11/bits/atomic_lockfree_defines.h:
 
 /usr/include/c++/11/bits/streambuf.tcc:
 
@@ -319,6 +354,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/sched.h:
 
+/usr/include/c++/11/ext/concurrence.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/gthr-default.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/gthr.h:
@@ -375,6 +412,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
+/usr/include/c++/11/bits/align.h:
+
 /usr/include/c++/11/vector:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
@@ -415,6 +454,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
+/usr/include/c++/11/bits/shared_ptr.h:
+
 /usr/include/x86_64-linux-gnu/bits/byteswap.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
@@ -424,6 +465,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/utility:
 
 /usr/include/features.h:
+
+/usr/include/c++/11/bits/atomic_base.h:
 
 /usr/include/c++/11/ext/numeric_traits.h:
 
@@ -525,9 +568,13 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/initializer_list:
 
+/usr/include/c++/11/bit:
+
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
 
 /usr/include/c++/11/cstdlib:
+
+/usr/include/c++/11/bits/shared_ptr_base.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
@@ -544,6 +591,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
 
 /usr/include/c++/11/bits/enable_special_members.h:
+
+/usr/include/c++/11/pstl/glue_memory_defs.h:
 
 /usr/include/c++/11/ext/type_traits.h:
 
@@ -565,6 +614,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
+/usr/include/c++/11/backward/auto_ptr.h:
+
 /usr/include/c++/11/bits/stl_uninitialized.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
@@ -572,6 +623,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/sys/select.h:
 
 /usr/include/c++/11/bits/hashtable_policy.h:
+
+/usr/include/c++/11/bits/allocated_ptr.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
@@ -601,6 +654,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/istream:
 
+../utils.hpp:
+
 /usr/include/c++/11/bits/stl_construct.h:
 
 /usr/include/c++/11/bits/exception.h:
@@ -622,6 +677,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/bits/uses_allocator.h:
 
 /usr/include/c++/11/bits/functional_hash.h:
+
+../expr.hpp:
 
 /usr/include/c++/11/bits/string_view.tcc:
 

@@ -5,7 +5,7 @@
 #include <variant>
 #include <vector>
 
-#include "utils.cpp"
+#include "utils.hpp"
 #include "token.hpp"
 
 using namespace std;
@@ -30,12 +30,9 @@ class Tokenizer {
     for (int i = 0; i < tokens.size(); i++) {
       cout << " TokenType: " << tokens[i].type
            << " TokenLexeme: " << tokens[i].lexeme << " TokenLiternal: ";
-      if (tokens[i].literal.value.has_value()) {
-        visit([](const auto& value) { cout << value; },
-              *tokens[i].literal.value);
-      } else {
-        cout << " (null)";
-      }
+      // if (tokens[i].literal.value.has_value()) {
+        tokens[i].literal.printLiteral();
+     
 
       cout << endl;
     }
@@ -49,9 +46,12 @@ class Tokenizer {
 
   void addToken(TokenType type, Literal literal) {
     string text = source.substr(start, current - start);
+    // cout<<text<<endl;
     tokens.push_back(Token(type, text, literal, line));
   }
    void addToken(TokenType type, Literal literal,string lexeme) {
+        // cout<<text<<endl;
+
     tokens.push_back(Token(type, lexeme, literal, line));
   }
   void addToken(TokenType type) { addToken(type, Literal()); }
@@ -95,7 +95,7 @@ class Tokenizer {
   }
   void tokenizedigit() {
     int numberOfDecimals = 0;
-    while (isdigit(peek()) || peek() == '.' || !isAtEnd()) {
+    while ((isdigit(peek()) || peek() == '.' )&& !isAtEnd()) {
       if (peek() == '.') {
         numberOfDecimals++;
         if (numberOfDecimals > 1) {

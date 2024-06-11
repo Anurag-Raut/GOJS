@@ -5,6 +5,8 @@
 #include <vector>
 #include <set>
 #include "tokenizer.cpp"
+#include "parser.cpp"
+#include "interpreter.cpp"
 using namespace std;
 
 
@@ -28,6 +30,14 @@ int main(int argc, char *argv[]) {
   cout << fileinput << endl;
   Tokenizer tokenizer(fileinput);
   tokenizer.display();
+  Parser parser(tokenizer.tokens);
+  unique_ptr<Expr> expression = parser.parse();
+  
+  // cout<<parser.current<<endl;
 
+  Interpreter interpreter(std::move(expression));
+  interpreter.evaluate();
+
+  
   return 0;
 }
