@@ -7,7 +7,11 @@
 #include "tokenizer.cpp"
 #include "parser.cpp"
 #include "interpreter.cpp"
+#include "declaration.hpp"
+// #include "globals.hpp"
+
 using namespace std;
+
 
 
 int main(int argc, char *argv[]) {
@@ -31,9 +35,9 @@ int main(int argc, char *argv[]) {
   Tokenizer tokenizer(fileinput);
   tokenizer.display();
   Parser parser(tokenizer.tokens);
-  vector<unique_ptr<Stmt>> statements = parser.parse();
+  vector<unique_ptr<Decl>> statements = parser.parse();
   
-  cout<<"parsing done"<<endl;
+  // cout<<"parsing done"<<endl;
 
   Interpreter interpreter(std::move(statements));
   interpreter.evaluate();

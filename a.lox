@@ -1,1 +1,3 @@
-print "400"+"400"
+var a= "water same"
+var b=" here"
+print (a+b)

@@ -4,6 +4,8 @@
 
 #include "token.hpp"
 #include "utils.hpp"
+#include "globals.hpp"
+
 
 using namespace std;
 
@@ -44,17 +46,12 @@ class BinaryExpr : public Expr {
     Literal left = this->left->evaluate();
     Literal right = this->right->evaluate();
 
-    // cout<<" left "<<left<<" right "<<right<<" op
-    // "<<op.type<<TokenType::PLUS<<endl;
     switch (op.type) {
       case TokenType::PLUS:
-        // cout<<to_string(left.value)<<endl;
         if (checkType<string>({left, right})) {
-          // cout << "string" << endl;
           return Literal(any_cast<string>(left.value) +
                          any_cast<string>(right.value));
         } else if (checkType<double>({left, right})) {
-          // cout << "double" << endl;
 
           return Literal(any_cast<double>(left.value) +
                          any_cast<double>(right.value));
@@ -197,6 +194,21 @@ class LiteralExpr : public Expr {
   }
 };
 
+class IdentifierExpr :public Expr {
+public:
+  string name;
+  IdentifierExpr(string name) { this->name = name; }
+
+  Literal evaluate() override {
+    // literal.printLiteral();
+    // cout<<"sad "<<name<<endl;
+    // variables[name].printLiteral();
+
+    return variables[name];
+  }
+
+};
+
 class GroupingExpr : public Expr {
  public:
   std::unique_ptr<Expr> expr;
@@ -204,5 +216,13 @@ class GroupingExpr : public Expr {
 
   Literal evaluate() override { return expr->evaluate(); }
 };
+
+// class VariableExpr : public Expr {
+//  public:
+//   std::unique_ptr<Expr> expr;
+//   GroupingExpr(std::unique_ptr<Expr> expr) { this->expr = std::move(expr); }
+
+//   Literal evaluate() override { return expr->evaluate(); }
+// };
 
 #endif  // EXPR_HPP

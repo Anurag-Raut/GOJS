@@ -2,17 +2,17 @@
 #include <iostream>
 #include <memory>
 #include "expr.hpp"
-#include "stmt.hpp"
+#include "declaration.hpp"
 
 using namespace std;
 class Interpreter{
 
     public:
-        vector<unique_ptr<Stmt>> stmts;
+        vector<unique_ptr<Decl>> declarations;
         
-        Interpreter(vector<unique_ptr<Stmt>>stmts){
-            // cout<<"size " <<stmts.size()<<endl;
-            this->stmts=std::move(stmts);
+        Interpreter(vector<unique_ptr<Decl>>declarations){
+            // cout<<"size " <<declarations.size()<<endl;
+            this->declarations=std::move(declarations);
         }
 
 
@@ -24,8 +24,8 @@ class Interpreter{
 
     //    literal.printLiteral();
 
-            for(auto &stmt:stmts){
-                    stmt->evaluate();
+            for(auto &decl:declarations){
+                    decl->execute();
             }
 
         // }

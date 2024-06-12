@@ -5,11 +5,10 @@
 #include <variant>
 #include <vector>
 
-#include "utils.hpp"
 #include "token.hpp"
+#include "utils.hpp"
 
 using namespace std;
-
 
 class Tokenizer {
  public:
@@ -31,8 +30,7 @@ class Tokenizer {
       cout << " TokenType: " << tokens[i].type
            << " TokenLexeme: " << tokens[i].lexeme << " TokenLiternal: ";
       // if (tokens[i].literal.value.has_value()) {
-        tokens[i].literal.printLiteral();
-     
+      tokens[i].literal.printLiteral();
 
       cout << endl;
     }
@@ -49,8 +47,8 @@ class Tokenizer {
     // cout<<text<<endl;
     tokens.push_back(Token(type, text, literal, line));
   }
-   void addToken(TokenType type, Literal literal,string lexeme) {
-        // cout<<text<<endl;
+  void addToken(TokenType type, Literal literal, string lexeme) {
+    // cout<<text<<endl;
 
     tokens.push_back(Token(type, lexeme, literal, line));
   }
@@ -58,12 +56,10 @@ class Tokenizer {
 
   bool match(char expected) {
     if (isAtEnd()) {
-
       return false;
     }
 
     if (source[current] != expected) {
-
       return false;
     }
 
@@ -83,19 +79,19 @@ class Tokenizer {
       }
       current++;
     }
-    if(peek() != '"' ){
-        reportError("unclosed string",line);
+    if (peek() != '"') {
+      reportError("unclosed string", line);
     }
-    start ++;
-    
+    start++;
+
     //  current--;
     string text = source.substr(start, current - start);
     current++;
-    addToken(TokenType::STRING, Literal(text),text);
+    addToken(TokenType::STRING, Literal(text), text);
   }
   void tokenizedigit() {
     int numberOfDecimals = 0;
-    while ((isdigit(peek()) || peek() == '.' )&& !isAtEnd()) {
+    while ((isdigit(peek()) || peek() == '.') && !isAtEnd()) {
       if (peek() == '.') {
         numberOfDecimals++;
         if (numberOfDecimals > 1) {
@@ -112,7 +108,14 @@ class Tokenizer {
   void identifierTokenize() {
     char c = source[current];
     while (isalnum(c) && !isAtEnd()) {
+      
       current++;
+      string text = source.substr(start, current - start);
+      
+      if(KEYWORDS[text]){
+        addToken(KEYWORDS[text]);
+        return;
+      }
       c = source[current];
     }
 
@@ -122,6 +125,9 @@ class Tokenizer {
       addToken(TokenType::IDENTIFIER);
     } else {
       addToken(type);
+      // if(type==TokenType::PRINT){
+        
+      // }
     }
   }
   void scanToken() {
@@ -158,8 +164,9 @@ class Tokenizer {
       case '*':
         addToken(STAR);
         break;
+   
       case '!':
-      
+
         addToken(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG);
         break;
       case '=':
@@ -179,7 +186,7 @@ class Tokenizer {
         }
         break;
       case ' ':
-      case '\r': 
+      case '\r':
       case '\t':
         break;
       case '\n':

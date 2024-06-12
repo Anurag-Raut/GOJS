@@ -6,20 +6,23 @@
 #include "expr.hpp"
 #include "stmt.hpp"
 #include "token.hpp"
+#include "declaration.hpp"
 using namespace std;
 class Parser {
  public:
   vector<Token> tokens;
   Parser(vector<Token> tokens) { this->tokens = tokens; }
 
-  vector<unique_ptr<Stmt>> parse() {
-    vector<unique_ptr<Stmt>> statements;
+  vector<unique_ptr<Decl>> parse() {
+    vector<unique_ptr<Decl>> declarations;
     while (!isAtEnd()) {
-      statements.push_back(statement());
+      declarations.push_back(declaration());
       // current++;
-      cout<<" current: "<<current<<" token: "<<tokens[current].lexeme<<endl;
+      // cout<<" current: "<<current<<" token: "<<tokens[current].lexeme<<endl;
     }
-    return statements;
+    // cout<<"size"<<declarations.size()<<endl;
+
+    return declarations;
   }
 
   unique_ptr<Expr> expression() { return equality(); }
@@ -117,6 +120,19 @@ class Parser {
       consume(RIGHT_PAREN, "Expect ')' after expression.");
       return std::make_unique<GroupingExpr>(std::move(expr));
     }
+    if(match({TokenType::IDENTIFIER})){
+          // cout<<"hellp "<<tokens[current].lexeme<<endl;
+          current++;
+        return make_unique<IdentifierExpr>(std::move(tokens[current-1].lexeme));
+      // if(variables.find(tokens[current].lexeme)!=variables.end()){
+      //   current++;
+      //   cout<<"got hrerere"<<endl;
+      //   return std::make_unique<LiteralExpr>(variables[tokens[current - 1].lexeme]);
+      // }
+      // else{
+      //   runtime_error("Undefined varaible");
+      // }
+    }
   }
 
   bool match(vector<TokenType> types) {
@@ -149,13 +165,41 @@ class Parser {
   unique_ptr<Stmt> statement() {
     if (match({TokenType::PRINT})) {
       current+=1;
+      consume(TokenType::LEFT_PAREN,"Expected '(' after print");
       unique_ptr<Expr> expr=std::move(expression());
-      
-       return make_unique<PrintStmt>(make_unique<any>(expr->evaluate().value));
+        // cout<<"toke "<<tokens[current].lexeme<<endl;
+        consume(TokenType::RIGHT_PAREN,"Expected ')' after print");
+
+       return make_unique<PrintStmt>(std::move(expr));
     }
     else {
       unique_ptr< Expr>expr=std::move(expression());
       return make_unique<ExprStmt>(ExprStmt(std::move(expr)));
+
+    }
+  }
+
+
+   unique_ptr<Decl> declaration() {
+    if (match({TokenType::VAR})) {
+      // cout<<"var"<<endl;
+      current+=1;
+      
+      string name =tokens[current].lexeme;
+      current++;
+      consume(TokenType::EQUAL,"Expected a \"=\" ");
+      unique_ptr<Expr> expr = std::move(expression());
+      // expr->evaluate().printLiteral();
+
+    // cout<<"cure "<<current<<" tok " <<tokens[current].lexeme<<endl;
+      // unique_ptr<Expr> expr=std::move(expression());
+      
+       return make_unique<VarDecl>(name,std::move(expr));
+    }
+    else {
+        return make_unique<Statement>(std::move(statement()));
+      // unique_ptr< Expr>expr=std::move(expression());
+      // return make_unique<ExprStmt>(ExprStmt(std::move(expr)));
 
     }
   }

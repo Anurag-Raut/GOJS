@@ -224,9 +224,9 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/optional \
   /usr/include/c++/11/variant \
   /usr/include/c++/11/bits/parse_numbers.h \
-  ../utils.hpp \
   ../token.hpp \
   /usr/include/c++/11/any \
+  ../utils.hpp \
   ../parser.cpp \
   /usr/include/c++/11/memory \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
@@ -243,7 +243,9 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   ../expr.hpp \
+  ../globals.hpp \
   ../stmt.hpp \
+  ../declaration.hpp \
   ../interpreter.cpp
 
 
@@ -437,6 +439,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/bits/concept_check.h:
 
+../globals.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
@@ -452,6 +456,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
 /usr/include/stdlib.h:
+
+../declaration.hpp:
 
 /usr/include/c++/11/debug/assertions.h:
 
