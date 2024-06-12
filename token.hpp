@@ -79,9 +79,11 @@ class Literal {
     } else if (value.type() == typeid(bool)) {
       cout << any_cast<bool>(value) << endl;
     } else {
-      cout << "Unkn own type" << endl;
+      cout << "Unknown type" << endl;
     }
   }
+
+  
 
 };
 

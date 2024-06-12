@@ -1,8 +1,10 @@
 
-#include <vector>
 #include <iostream>
-#include <memory> 
+#include <memory>
+#include <vector>
+
 #include "expr.hpp"
+#include "stmt.hpp"
 #include "token.hpp"
 using namespace std;
 class Parser {
@@ -10,24 +12,27 @@ class Parser {
   vector<Token> tokens;
   Parser(vector<Token> tokens) { this->tokens = tokens; }
 
-  unique_ptr<Expr>  parse() {
-
-    return expression();
-
+  vector<unique_ptr<Stmt>> parse() {
+    vector<unique_ptr<Stmt>> statements;
+    while (!isAtEnd()) {
+      statements.push_back(statement());
+      // current++;
+      cout<<" current: "<<current<<" token: "<<tokens[current].lexeme<<endl;
+    }
+    return statements;
   }
 
-  unique_ptr<Expr> expression(){
-    return equality();
-  }
+  unique_ptr<Expr> expression() { return equality(); }
 
   unique_ptr<Expr> equality() {
     unique_ptr<Expr> left = comparison();
-    if (match({TokenType::BANG, TokenType::BANG_EQUAL})) {
+    if (match({TokenType::EQUAL_EQUAL, TokenType::BANG_EQUAL})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = comparison();
+      unique_ptr<Expr> right = equality();
 
-    return std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+      return std::make_unique<BinaryExpr>(std::move(left), op,
+                                          std::move(right));
     }
 
     return left;
@@ -39,9 +44,10 @@ class Parser {
                TokenType::LESS_EQUAL})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = term();
+      unique_ptr<Expr> right = comparison();
 
-    return std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+      return std::make_unique<BinaryExpr>(std::move(left), op,
+                                          std::move(right));
     }
 
     return left;
@@ -52,9 +58,10 @@ class Parser {
     if (match({TokenType::PLUS, TokenType::MINUS})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = factor();
+      unique_ptr<Expr> right = term();
 
-    return std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+      return std::make_unique<BinaryExpr>(std::move(left), op,
+                                          std::move(right));
     }
 
     return left;
@@ -65,9 +72,10 @@ class Parser {
     if (match({TokenType::STAR, TokenType::SLASH})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = unary();
+      unique_ptr<Expr> right = factor();
 
-    return std::make_unique<BinaryExpr>(std::move(left), op, std::move(right));
+      return std::make_unique<BinaryExpr>(std::move(left), op,
+                                          std::move(right));
     }
 
     return left;
@@ -75,7 +83,7 @@ class Parser {
 
   unique_ptr<Expr> unary() {
     // Expr left = unary();
-    if (match({TokenType::STAR, TokenType::SLASH})) {
+    if (match({TokenType::BANG})) {
       Token op = tokens[current];
       current++;
       unique_ptr<Expr> right = unary();
@@ -88,22 +96,21 @@ class Parser {
   unique_ptr<Expr> primary() {
     // cout<<tokens[current].lexeme<<endl;
 
-    if (match({TokenType::FALSE})){
-        current++;
-        return std::make_unique<LiteralExpr>(false);
-
+    if (match({TokenType::FALSE})) {
+      current++;
+      return std::make_unique<LiteralExpr>(false);
     }
-    if (match({TokenType::TRUE})){
-        current++;
-        return std::make_unique<LiteralExpr>(true);
+    if (match({TokenType::TRUE})) {
+      current++;
+      return std::make_unique<LiteralExpr>(true);
     }
-    if (match({TokenType::NIL})){ 
-        current++;
-        return std::make_unique<LiteralExpr>();
+    if (match({TokenType::NIL})) {
+      current++;
+      return std::make_unique<LiteralExpr>();
     }
     if (match({TokenType::NUMBER, TokenType::STRING})) {
-        current++;
-      return std::make_unique<LiteralExpr>(tokens[current-1].literal);
+      current++;
+      return std::make_unique<LiteralExpr>(tokens[current - 1].literal);
     }
     if (match({TokenType::LEFT_PAREN})) {
       unique_ptr<Expr> expr = expression();
@@ -113,7 +120,6 @@ class Parser {
   }
 
   bool match(vector<TokenType> types) {
-
     for (auto type : types) {
       if (tokens[current].type == type) {
         return true;
@@ -123,23 +129,42 @@ class Parser {
     return false;
   }
 
-  void consume(TokenType type,string error_message){
-    if(tokens[current].type==type){
-        current++;
-        return ;
+  void consume(TokenType type, string error_message) {
+    if (tokens[current].type == type) {
+      current++;
+      return;
     }
 
-    
     error(error_message);
   }
 
-
-
-  void error(string error_message){
-        runtime_error(error_message(char *));
-        return ;
+  void error(string error_message) {
+    runtime_error(error_message(char *));
+    return;
   }
 
 //  private:
   int current = 0;
+
+  unique_ptr<Stmt> statement() {
+    if (match({TokenType::PRINT})) {
+      current+=1;
+      unique_ptr<Expr> expr=std::move(expression());
+      
+       return make_unique<PrintStmt>(make_unique<any>(expr->evaluate().value));
+    }
+    else {
+      unique_ptr< Expr>expr=std::move(expression());
+      return make_unique<ExprStmt>(ExprStmt(std::move(expr)));
+
+    }
+  }
+
+  private:
+    bool isAtEnd(){
+      if(current>=tokens.size() || tokens[current].type==TokenType::ENDOFFILE){
+        return true;
+      }
+      return false;
+    }
 };

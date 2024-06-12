@@ -29,49 +29,132 @@ class BinaryExpr : public Expr {
     this->right = std::move(right);
     this->op = op;
   }
+  template <typename T>
+  bool checkType(vector<Literal> l1) {
+    for (auto &r : l1) {
+      if (r.value.type() != typeid(T)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   Literal evaluate() override {
     Literal left = this->left->evaluate();
     Literal right = this->right->evaluate();
-    cout << "Left ";
-    left.printLiteral();
-    cout << "Right ";
-    right.printLiteral();
 
     // cout<<" left "<<left<<" right "<<right<<" op
     // "<<op.type<<TokenType::PLUS<<endl;
     switch (op.type) {
       case TokenType::PLUS:
         // cout<<to_string(left.value)<<endl;
-        if (left.value.type() == typeid(string) &&
-            right.value.type() == typeid(string)) {
-          cout << "string" << endl;
+        if (checkType<string>({left, right})) {
+          // cout << "string" << endl;
           return Literal(any_cast<string>(left.value) +
                          any_cast<string>(right.value));
-        } else if (left.value.type() == typeid(double) &&
-                   right.value.type() == typeid(double)) {
-          cout << "double" << endl;
+        } else if (checkType<double>({left, right})) {
+          // cout << "double" << endl;
 
           return Literal(any_cast<double>(left.value) +
                          any_cast<double>(right.value));
-        }
-        else {
+        } else {
           runtime_error("both operands not same type");
         }
-        case TokenType::STAR:
-          if (left.value.type() == typeid(double) &&
-                   right.value.type() == typeid(double)) {
-          cout << "double" << endl;
 
-          return Literal(any_cast<double>(left.value) *
+        break;
+        case TokenType::MINUS:
+        if (checkType<double>({left, right})) {
+          return Literal(any_cast<double>(left.value) -
                          any_cast<double>(right.value));
-        }
-        else {
+        } else {
           runtime_error("both operands not double");
         }
-        
 
+        break;
+      case TokenType::STAR:
+        if (checkType<double>({left, right})) {
+          return Literal(any_cast<double>(left.value) *
+                         any_cast<double>(right.value));
+        } else {
+          runtime_error("both operands not double");
+        }
+
+        break;
+
+      case TokenType::SLASH:
+        if (checkType<double>({left, right})) {
+          // cout << "double" << endl;
+
+          return Literal(any_cast<double>(left.value) /
+                         any_cast<double>(right.value));
+        } else {
+          runtime_error("both operands not double");
+        }
+
+        break;
+
+      case TokenType::EQUAL_EQUAL:
+        if (checkType<bool>({left, right})) {
+          if (any_cast<bool>(left.value) == any_cast<bool>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+
+        break;
+
+      case TokenType::BANG_EQUAL:
+        if (checkType<bool>({left, right})) {
+          if (any_cast<bool>(left.value) != any_cast<bool>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+
+        break;
+
+      case TokenType::GREATER:
+        if (checkType<double>({left, right})) {
+          if (any_cast<double>(left.value) > any_cast<double>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+        break;
+      case TokenType::GREATER_EQUAL:
+        if (checkType<double>({left, right})) {
+          if (any_cast<double>(left.value) >= any_cast<double>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+        break;
+      case TokenType::LESS:
+        if (checkType<double>({left, right})) {
+          if (any_cast<double>(left.value) < any_cast<double>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+        break;
+      case TokenType::LESS_EQUAL:
+        if (checkType<double>({left, right})) {
+          if (any_cast<double>(left.value) <= any_cast<double>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+
+        break;
       default:
+        runtime_error("No matching operation defined");
         break;
     }
   }
@@ -108,7 +191,7 @@ class LiteralExpr : public Expr {
   LiteralExpr() { this->literal = Literal(); }
 
   Literal evaluate() override {
-    literal.printLiteral();
+    // literal.printLiteral();
 
     return literal;
   }

@@ -31,11 +31,11 @@ int main(int argc, char *argv[]) {
   Tokenizer tokenizer(fileinput);
   tokenizer.display();
   Parser parser(tokenizer.tokens);
-  unique_ptr<Expr> expression = parser.parse();
+  vector<unique_ptr<Stmt>> statements = parser.parse();
   
-  // cout<<parser.current<<endl;
+  cout<<"parsing done"<<endl;
 
-  Interpreter interpreter(std::move(expression));
+  Interpreter interpreter(std::move(statements));
   interpreter.evaluate();
 
   

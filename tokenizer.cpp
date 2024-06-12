@@ -102,6 +102,7 @@ class Tokenizer {
           reportError("invalid number", line);
         }
       }
+      current++;
     }
     string text = source.substr(start, current - start);
     double d = stod(text);
