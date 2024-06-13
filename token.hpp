@@ -82,6 +82,13 @@ class Literal {
       cout << "Unknown type" << endl;
     }
   }
+  template < typename T>
+  bool checkType(){
+    if(value.type()==typeid(T)){
+      return true;
+    }
+    return false;
+  } 
 
   
 

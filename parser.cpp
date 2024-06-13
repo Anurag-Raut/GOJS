@@ -33,6 +33,7 @@ class Parser {
       Token op = tokens[current];
       current++;
       unique_ptr<Expr> right = equality();
+    
 
       return std::make_unique<BinaryExpr>(std::move(left), op,
                                           std::move(right));
@@ -191,19 +192,21 @@ class Parser {
       return make_unique<VarDecl>(name, std::move(expr));
     } else if (match({TokenType::FUNC})) {
       return getFunctionDecl();
-    } else if (match({TokenType::LEFT_BRACE})) {
-      consume(TokenType::LEFT_BRACE, "Expected '{'");
+    } 
+    else if(match({TokenType::IF})){
+      consume(TokenType::IF,"Expected \"if\" ");
+      consume(TokenType::LEFT_PAREN,"Expected \"(\" ");
 
-      unique_ptr<vector<unique_ptr<Decl>>> decls =
-          make_unique<vector<unique_ptr<Decl>>>();
+      unique_ptr<Expr> expr = std::move(expression());
 
-      while (tokens[current].type != TokenType::RIGHT_BRACE) {
-        unique_ptr<Decl> decl = std::move(declaration());
-        decls->push_back(std::move(decl));
-      }
+      consume(TokenType::RIGHT_PAREN,"Expected \")\" ");
 
-      consume(TokenType::RIGHT_BRACE, "Expected '}'");
-      return make_unique<BlockDecl>(std::move(decls));
+      unique_ptr<BlockDecl> block=std::move(getBlock());
+      return make_unique<IfDecl>(std::move(expr),std::move(block));
+
+    }
+    else if (match({TokenType::LEFT_BRACE})) {
+      return getBlock();
 
     } else {
       return make_unique<Statement>(std::move(statement()));
@@ -239,6 +242,23 @@ class Parser {
     //   }
 
     // }
+  }
+
+  unique_ptr<BlockDecl> getBlock(){
+
+     consume(TokenType::LEFT_BRACE, "Expected '{'");
+
+      unique_ptr<vector<unique_ptr<Decl>>> decls =
+          make_unique<vector<unique_ptr<Decl>>>();
+
+      while (tokens[current].type != TokenType::RIGHT_BRACE) {
+        unique_ptr<Decl> decl = std::move(declaration());
+        decls->push_back(std::move(decl));
+      }
+
+      consume(TokenType::RIGHT_BRACE, "Expected '}'");
+      return make_unique<BlockDecl>(std::move(decls));
+
   }
 
   // void consumeVaraibleType(){

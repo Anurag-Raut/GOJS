@@ -100,6 +100,20 @@ class BinaryExpr : public Expr {
             return Literal(false);
           }
         }
+         else if (checkType<double>({left, right})) {
+          if (any_cast<double>(left.value) == any_cast<double>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
+        else if (checkType<string>({left, right})) {
+          if (any_cast<string>(left.value) == any_cast<string>(right.value)) {
+            return Literal(true);
+          } else {
+            return Literal(false);
+          }
+        }
 
         break;
 

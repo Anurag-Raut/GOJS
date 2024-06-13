@@ -100,6 +100,34 @@ class BlockDecl : public Decl {
 
 };
 
+class IfDecl : public Decl {
+
+  public :
+    unique_ptr<Expr> expr;
+    unique_ptr<BlockDecl> block;
+
+    IfDecl(unique_ptr<Expr> expr,unique_ptr<BlockDecl> block) {
+    this->expr=std::move(expr);
+    this->block = std::move(block);
+  }
+
+  void execute(Environment *env) {
+    Literal ans=expr->evaluate(env);
+    if(!ans.checkType<bool>()){
+            block->execute(env);
+
+    }
+    else if(ans.checkType<bool>() &&  any_cast<bool>(ans.value) ){
+
+      block->execute(env);
+     
+    }
+  
+    
+  }
+
+};
+
 
 // getVariable(){
 

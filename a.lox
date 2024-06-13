@@ -1,16 +1,11 @@
-{
-    var a= "water same"
-    print (a+"asds")
-    {
-        var a="anurag"
-        print(a)
-        
 
+{
+    var a ="anrag"
+    var b= "anurag"
+    if(a==b){
+        print("same")
+    }
+    else{
+        
     }
 }
-
-{
-    var a="ea"
-    print (a)
-}
-
