@@ -48,6 +48,7 @@ class BinaryExpr : public Expr {
     Literal right = this->right->evaluate(env);
 
     switch (op.type) {
+        
       case TokenType::PLUS:
         if (checkType<string>({left, right})) {
           return Literal(any_cast<string>(left.value) +

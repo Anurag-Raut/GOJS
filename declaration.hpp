@@ -84,7 +84,7 @@ class IfDecl : public Decl {
  public:
   unique_ptr<Expr> expr;
   unique_ptr<BlockDecl> ifBlock;
-  unique_ptr<BlockDecl> elseBlock=NULL;
+  unique_ptr<BlockDecl> elseBlock = NULL;
 
   IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock,
          unique_ptr<BlockDecl> elseBlock) {
@@ -95,7 +95,6 @@ class IfDecl : public Decl {
   IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock) {
     this->expr = std::move(expr);
     this->ifBlock = std::move(ifBlock);
-   
   }
 
   void execute(Environment *env) {
@@ -108,6 +107,26 @@ class IfDecl : public Decl {
 
     } else {
       elseBlock->execute(env);
+    }
+  }
+};
+
+class WhileBlock : public Decl {
+ public:
+  unique_ptr<Expr> expr;
+  unique_ptr<BlockDecl> block;
+
+  WhileBlock(unique_ptr<Expr> expr, unique_ptr<BlockDecl> block) {
+    this->expr = std::move(expr);
+    this->block = std::move(block);
+  }
+
+  void execute(Environment *env) {
+    Literal ans = expr->evaluate(env);
+    while (!ans.checkType<bool>() || ans.checkType<bool>() && any_cast<bool>(ans.value)) {
+
+        block->execute(env);
+        ans = expr->evaluate(env);
     }
   }
 };

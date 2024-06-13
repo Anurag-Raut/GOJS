@@ -172,7 +172,21 @@ class Parser {
       consume(TokenType::RIGHT_PAREN, "Expected ')' after print");
 
       return make_unique<PrintStmt>(std::move(expr));
-    } else {
+    }
+    else if(match({TokenType::IDENTIFIER})) {
+      string variableName = tokens[current].lexeme;
+        consume(TokenType::IDENTIFIER, "Expected 'IDENTIFIER' after print");
+        consume(TokenType::EQUAL, "Expected '=' after print");
+
+        unique_ptr<Expr> expr = std::move(expression());
+
+        return make_unique<AssignStmt>(variableName,std::move(expr));
+
+
+
+
+    }
+     else {
       unique_ptr<Expr> expr = std::move(expression());
       return make_unique<ExprStmt>(std::move(expr));
     }
@@ -208,6 +222,16 @@ class Parser {
                                    std::move(elseBlock));
       }
       return make_unique<IfDecl>(std::move(expr), std::move(ifBlock));
+
+    } else if (match({TokenType::WHILE})) {
+      consume(TokenType::WHILE, "Expected \"while\" ");
+      consume(TokenType::LEFT_PAREN, "Expected \"while\" ");
+      unique_ptr<Expr> expr = std::move(expression());
+
+      consume(TokenType::RIGHT_PAREN, "Expected \"while\" ");
+      unique_ptr<BlockDecl> block = std::move(getBlock());
+
+      return make_unique<WhileBlock>(std::move(expr), std::move(block));
 
     } else if (match({TokenType::LEFT_BRACE})) {
       return getBlock();
