@@ -243,9 +243,9 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   ../declaration.hpp \
+  ../environment.hpp \
   ../stmt.hpp \
   ../expr.hpp \
-  ../environment.hpp \
   ../interpreter.cpp
 
 

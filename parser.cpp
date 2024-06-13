@@ -33,7 +33,6 @@ class Parser {
       Token op = tokens[current];
       current++;
       unique_ptr<Expr> right = equality();
-    
 
       return std::make_unique<BinaryExpr>(std::move(left), op,
                                           std::move(right));
@@ -192,20 +191,25 @@ class Parser {
       return make_unique<VarDecl>(name, std::move(expr));
     } else if (match({TokenType::FUNC})) {
       return getFunctionDecl();
-    } 
-    else if(match({TokenType::IF})){
-      consume(TokenType::IF,"Expected \"if\" ");
-      consume(TokenType::LEFT_PAREN,"Expected \"(\" ");
+    } else if (match({TokenType::IF})) {
+      consume(TokenType::IF, "Expected \"if\" ");
+      consume(TokenType::LEFT_PAREN, "Expected \"(\" ");
 
       unique_ptr<Expr> expr = std::move(expression());
 
-      consume(TokenType::RIGHT_PAREN,"Expected \")\" ");
+      consume(TokenType::RIGHT_PAREN, "Expected \")\" ");
 
-      unique_ptr<BlockDecl> block=std::move(getBlock());
-      return make_unique<IfDecl>(std::move(expr),std::move(block));
+      unique_ptr<BlockDecl> ifBlock = std::move(getBlock());
+      if (TokenType::ELSE) {
+        consume(TokenType::ELSE, "Expected \")\" ");
+        unique_ptr<BlockDecl> elseBlock = std::move(getBlock());
 
-    }
-    else if (match({TokenType::LEFT_BRACE})) {
+        return make_unique<IfDecl>(std::move(expr), std::move(ifBlock),
+                                   std::move(elseBlock));
+      }
+      return make_unique<IfDecl>(std::move(expr), std::move(ifBlock));
+
+    } else if (match({TokenType::LEFT_BRACE})) {
       return getBlock();
 
     } else {
@@ -244,21 +248,19 @@ class Parser {
     // }
   }
 
-  unique_ptr<BlockDecl> getBlock(){
+  unique_ptr<BlockDecl> getBlock() {
+    consume(TokenType::LEFT_BRACE, "Expected '{'");
 
-     consume(TokenType::LEFT_BRACE, "Expected '{'");
+    unique_ptr<vector<unique_ptr<Decl>>> decls =
+        make_unique<vector<unique_ptr<Decl>>>();
 
-      unique_ptr<vector<unique_ptr<Decl>>> decls =
-          make_unique<vector<unique_ptr<Decl>>>();
+    while (tokens[current].type != TokenType::RIGHT_BRACE) {
+      unique_ptr<Decl> decl = std::move(declaration());
+      decls->push_back(std::move(decl));
+    }
 
-      while (tokens[current].type != TokenType::RIGHT_BRACE) {
-        unique_ptr<Decl> decl = std::move(declaration());
-        decls->push_back(std::move(decl));
-      }
-
-      consume(TokenType::RIGHT_BRACE, "Expected '}'");
-      return make_unique<BlockDecl>(std::move(decls));
-
+    consume(TokenType::RIGHT_BRACE, "Expected '}'");
+    return make_unique<BlockDecl>(std::move(decls));
   }
 
   // void consumeVaraibleType(){

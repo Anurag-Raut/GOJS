@@ -1,11 +1,19 @@
 
-{
-    var a ="anrag"
+
+    var a ="anurag"
     var b= "anurag"
     if(a==b){
+        var a="water"
         print("same")
     }
     else{
-        
+        print("different")
     }
-}
+
+    print(a)
+
+    var num=10
+    
+
+  
+

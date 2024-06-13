@@ -193,7 +193,7 @@ CMakeFiles/compiler.dir/main.cpp.o: \
  /usr/include/c++/11/backward/auto_ptr.h \
  /usr/include/c++/11/pstl/glue_memory_defs.h \
  /home/anurag/projects/lox-compiler/declaration.hpp \
+ /home/anurag/projects/lox-compiler/environment.hpp \
  /home/anurag/projects/lox-compiler/stmt.hpp \
  /home/anurag/projects/lox-compiler/expr.hpp \
- /home/anurag/projects/lox-compiler/environment.hpp \
  /home/anurag/projects/lox-compiler/interpreter.cpp
