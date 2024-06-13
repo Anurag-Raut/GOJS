@@ -5,7 +5,7 @@
 
 #include "stmt.hpp"
 #include "token.hpp"
-#include "globals.hpp"
+#include "environment.hpp"
 
 using namespace std;
 
@@ -16,7 +16,8 @@ using namespace std;
 
 class Decl {
     public:
-  virtual void execute() = 0;
+  // virtual void execute() = 0;
+  virtual void execute(Environment *globalEnv)=0;
 };
 
 class FuncDecl : public Decl {
@@ -29,9 +30,11 @@ class FuncDecl : public Decl {
     this->statements = std::move(statements);
   }
 
-  void execute() {
+  void execute(Environment *env) {
+     
+
     for (auto& stmt : statements) {
-      stmt->evaluate();
+      stmt->evaluate(env);
     }
   }
 
@@ -47,8 +50,8 @@ class Statement : public Decl {
     }
 
 
-    void execute(){
-        stmt->evaluate();
+    void execute(Environment *env){
+        stmt->evaluate(env);
     }
 };
 
@@ -62,11 +65,38 @@ class VarDecl : public Decl {
     this->value = std::move(value);
   }
 
-  void execute() {
-    variables[name]=value->evaluate();
+  void execute(Environment *env) {
+    // cout<<"doing var declartion"<<endl;
+    // Literal l1=value->evaluate(env);
+    // l1.printLiteral();
+    env->setVariable(name,value->evaluate(env));
     // variables[name].printLiteral();
+
+
   }
 
+
+};
+
+
+class BlockDecl : public Decl {
+
+  public :
+    unique_ptr<vector<unique_ptr<Decl>>> decls;
+
+    BlockDecl(unique_ptr<vector<unique_ptr<Decl>>> decls) {
+ 
+    this->decls = std::move(decls);
+  }
+
+  void execute(Environment *env) {
+     Environment *childEnv=new Environment();
+      childEnv->parent=env;
+    for( const auto& decl: *decls){
+      decl->execute(childEnv);
+    }
+    
+  }
 
 };
 
@@ -76,12 +106,12 @@ class VarDecl : public Decl {
 // }
 
 template <typename T>
-class Argument {
+class Paramter {
  public:
   T type;
   string name;
 
-  Argument(string name, T type) {
+  Paramter(string name, T type) {
     this->name = name;
     this->type = type;
   }

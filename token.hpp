@@ -37,7 +37,7 @@ enum TokenType {
   CLASS,
   ELSE,
   FALSE,
-  FUN,
+  FUNC,
   FOR,
   IF,
   NIL,
@@ -55,7 +55,7 @@ enum TokenType {
 std::unordered_map<std::string, TokenType> KEYWORDS = {
     {"and", TokenType::AND},       {"class", TokenType::CLASS},
     {"else", TokenType::ELSE},     {"false", TokenType::FALSE},
-    {"fun", TokenType::FUN},       {"for", TokenType::FOR},
+    {"func", TokenType::FUNC},       {"for", TokenType::FOR},
     {"if", TokenType::IF},         {"nil", TokenType::NIL},
     {"or", TokenType::OR},         {"print", TokenType::PRINT},
     {"return", TokenType::RETURN}, {"super", TokenType::SUPER},
@@ -66,7 +66,7 @@ class Literal {
  public:
   any value;
 
-  Literal(const string& s) : value(s) {}
+  Literal( string s) : value(s) {}
   Literal(double d) : value(d) {}
   Literal(bool b) : value(b) {}
   Literal() : value(nullopt) {}

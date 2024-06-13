@@ -1,3 +1,16 @@
-var a= "water same"
-var b=" here"
-print (a+b)
+{
+    var a= "water same"
+    print (a+"asds")
+    {
+        var a="anurag"
+        print(a)
+        
+
+    }
+}
+
+{
+    var a="ea"
+    print (a)
+}
+

@@ -242,14 +242,16 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/atomic_lockfree_defines.h \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
-  ../expr.hpp \
-  ../globals.hpp \
-  ../stmt.hpp \
   ../declaration.hpp \
+  ../stmt.hpp \
+  ../expr.hpp \
+  ../environment.hpp \
   ../interpreter.cpp
 
 
 ../interpreter.cpp:
+
+../environment.hpp:
 
 /usr/include/c++/11/bits/stl_raw_storage_iter.h:
 
@@ -438,8 +440,6 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/bits/predefined_ops.h:
 
 /usr/include/c++/11/bits/concept_check.h:
-
-../globals.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 

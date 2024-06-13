@@ -6,6 +6,7 @@
 #include <set>
 #include "tokenizer.cpp"
 #include "parser.cpp"
+#include "environment.hpp"
 #include "interpreter.cpp"
 #include "declaration.hpp"
 // #include "globals.hpp"
@@ -38,6 +39,8 @@ int main(int argc, char *argv[]) {
   vector<unique_ptr<Decl>> statements = parser.parse();
   
   // cout<<"parsing done"<<endl;
+
+  
 
   Interpreter interpreter(std::move(statements));
   interpreter.evaluate();

@@ -1,10 +1,10 @@
-#include <any>
+// #include <any>
 #include <memory>
 #include <stdexcept>
 
 #include "token.hpp"
 #include "utils.hpp"
-#include "globals.hpp"
+#include "environment.hpp"
 
 
 using namespace std;
@@ -16,7 +16,8 @@ class Expr {
  public:
   Expr() = default;
 
-  virtual Literal evaluate() = 0;
+  // virtual Literal evaluate() = 0;
+  virtual Literal evaluate(Environment *env)=0;
 };
 
 class BinaryExpr : public Expr {
@@ -42,9 +43,9 @@ class BinaryExpr : public Expr {
     return true;
   }
 
-  Literal evaluate() override {
-    Literal left = this->left->evaluate();
-    Literal right = this->right->evaluate();
+  Literal evaluate(Environment *env) override {
+    Literal left = this->left->evaluate(env);
+    Literal right = this->right->evaluate(env);
 
     switch (op.type) {
       case TokenType::PLUS:
@@ -167,8 +168,8 @@ class UnaryExpr : public Expr {
     this->op = op;
   }
 
-  Literal evaluate() override {
-    Literal right = this->right->evaluate();
+  Literal evaluate(Environment *env) override {
+    Literal right = this->right->evaluate(env);
 
     switch (op.type) {
       case TokenType::BANG:
@@ -187,8 +188,9 @@ class LiteralExpr : public Expr {
   LiteralExpr(Literal literal) { this->literal = literal; }
   LiteralExpr() { this->literal = Literal(); }
 
-  Literal evaluate() override {
+  Literal evaluate(Environment *env) override {
     // literal.printLiteral();
+    // cout<<"gegeg"<<endl;
 
     return literal;
   }
@@ -199,12 +201,12 @@ public:
   string name;
   IdentifierExpr(string name) { this->name = name; }
 
-  Literal evaluate() override {
+  Literal evaluate(Environment *env) override {
     // literal.printLiteral();
     // cout<<"sad "<<name<<endl;
     // variables[name].printLiteral();
 
-    return variables[name];
+    return env->getVariable(name,env);
   }
 
 };
@@ -214,7 +216,7 @@ class GroupingExpr : public Expr {
   std::unique_ptr<Expr> expr;
   GroupingExpr(std::unique_ptr<Expr> expr) { this->expr = std::move(expr); }
 
-  Literal evaluate() override { return expr->evaluate(); }
+  Literal evaluate(Environment *env) override { return expr->evaluate(env); }
 };
 
 // class VariableExpr : public Expr {

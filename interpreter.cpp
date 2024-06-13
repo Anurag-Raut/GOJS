@@ -1,39 +1,32 @@
 
 #include <iostream>
 #include <memory>
-#include "expr.hpp"
+
 #include "declaration.hpp"
+#include "expr.hpp"
 
 using namespace std;
-class Interpreter{
+class Interpreter {
+ public:
+  vector<unique_ptr<Decl>> declarations;
 
-    public:
-        vector<unique_ptr<Decl>> declarations;
-        
-        Interpreter(vector<unique_ptr<Decl>>declarations){
-            // cout<<"size " <<declarations.size()<<endl;
-            this->declarations=std::move(declarations);
-        }
+  Interpreter(vector<unique_ptr<Decl>> declarations) {
+    // cout<<"size " <<declarations.size()<<endl;
+    this->declarations = std::move(declarations);
+  }
 
-
-       void evaluate(){
+  void evaluate() {
     //     Literal literal = stmts->evaluate();
-    //     cout<<"evaluated value"<<endl;
+    // cout<<"evaluated value"<<endl;
     //     // if(literal.value.has_value()){
     //         // Literal l1((string)"asdasd");
 
-    //    literal.printLiteral();
+    //    Enviliteral.printLiteral();
+    Environment *globalEnv = new Environment();
+    for (auto &decl : declarations) {
+      decl->execute(globalEnv);
+    }
 
-            for(auto &decl:declarations){
-                    decl->execute();
-            }
-
-        // }
-       }
-
-
-        
-        
-
-
+    // }
+  }
 };
