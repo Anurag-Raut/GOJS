@@ -3,17 +3,13 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
-#include "token.hpp"
+#include "declarations/environment.hpp"
 
-#ifndef ENV_HPP
-#define ENV_HPP
 
-class Environment {
- public:
-  Environment* parent = NULL;
-  std::unordered_map<std::string, Literal> variables;
 
-  Literal getVariable(string key, Environment* env) {
+
+
+  Literal Environment::getVariable(string key, Environment* env) {
     if (env->variables.find(key) != env->variables.end()) {
       return env->variables[key];
     } else if (env->parent == NULL) {
@@ -23,12 +19,12 @@ class Environment {
     }
   }
 
-  void setVariable(string key, Literal value) {
+  void Environment::setVariable(string key, Literal value) {
     this->variables[key] = value;
     // cout<<"done "<<key<<endl;
   }
 
-  void assignValue(string key, Literal value, Environment* env ) {
+  void Environment::assignValue(string key, Literal value, Environment* env ) {
     if (env->variables.find(key) != env->variables.end()) {
        env->variables[key]=value;
        return ;
@@ -38,6 +34,4 @@ class Environment {
       return assignValue(key, value, env->parent);
     }
   }
-};
 
-#endif
