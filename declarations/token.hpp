@@ -1,7 +1,4 @@
-
-
-#ifndef TOKEN_H
-#define TOKEN_H
+#pragma once
 
 #include <any>
 #include <optional>
@@ -9,6 +6,7 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+#include <iostream>
 using namespace std;
 enum TokenType {
   LEFT_PAREN,
@@ -110,4 +108,3 @@ class Token {
 
   Token() = default;
 };
-#endif

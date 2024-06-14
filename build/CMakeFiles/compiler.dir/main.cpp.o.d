@@ -1,5 +1,5 @@
 CMakeFiles/compiler.dir/main.cpp.o: \
- /home/anurag/projects/lox-compiler/main.cpp /usr/include/stdc-predef.h \
+ /home/anurag/projects/refactor-lox/main.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/11/algorithm /usr/include/c++/11/utility \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -173,13 +173,7 @@ CMakeFiles/compiler.dir/main.cpp.o: \
  /usr/include/c++/11/bits/fstream.tcc /usr/include/c++/11/iostream \
  /usr/include/c++/11/set /usr/include/c++/11/bits/stl_tree.h \
  /usr/include/c++/11/bits/stl_set.h \
- /usr/include/c++/11/bits/stl_multiset.h \
- /home/anurag/projects/lox-compiler/tokenizer.cpp \
- /usr/include/c++/11/optional /usr/include/c++/11/variant \
- /usr/include/c++/11/bits/parse_numbers.h \
- /home/anurag/projects/lox-compiler/token.hpp /usr/include/c++/11/any \
- /home/anurag/projects/lox-compiler/utils.hpp \
- /home/anurag/projects/lox-compiler/parser.cpp /usr/include/c++/11/memory \
+ /usr/include/c++/11/bits/stl_multiset.h /usr/include/c++/11/memory \
  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
  /usr/include/c++/11/bits/align.h /usr/include/c++/11/bit \
  /usr/include/c++/11/bits/unique_ptr.h \
@@ -192,8 +186,18 @@ CMakeFiles/compiler.dir/main.cpp.o: \
  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
  /usr/include/c++/11/backward/auto_ptr.h \
  /usr/include/c++/11/pstl/glue_memory_defs.h \
- /home/anurag/projects/lox-compiler/declaration.hpp \
- /home/anurag/projects/lox-compiler/environment.hpp \
- /home/anurag/projects/lox-compiler/stmt.hpp \
- /home/anurag/projects/lox-compiler/expr.hpp \
- /home/anurag/projects/lox-compiler/interpreter.cpp
+ /home/anurag/projects/refactor-lox/declarations/token.hpp \
+ /usr/include/c++/11/any /usr/include/c++/11/optional \
+ /usr/include/c++/11/variant /usr/include/c++/11/bits/parse_numbers.h \
+ /home/anurag/projects/refactor-lox/declarations/environment.hpp \
+ /home/anurag/projects/refactor-lox/declarations/expr.hpp \
+ /home/anurag/projects/refactor-lox/declarations/stmt.hpp \
+ /home/anurag/projects/refactor-lox/declarations/declaration.hpp \
+ /home/anurag/projects/refactor-lox/expr.cpp \
+ /home/anurag/projects/refactor-lox/stmt.cpp \
+ /home/anurag/projects/refactor-lox/declaration.cpp \
+ /home/anurag/projects/refactor-lox/environment.cpp \
+ /home/anurag/projects/refactor-lox/tokenizer.cpp \
+ /home/anurag/projects/refactor-lox/utils.hpp \
+ /home/anurag/projects/refactor-lox/parser.cpp \
+ /home/anurag/projects/refactor-lox/interpreter.cpp

@@ -3,10 +3,11 @@
 #include <memory>
 #include <vector>
 
-#include "declaration.hpp"
-#include "expr.hpp"
-#include "stmt.hpp"
-#include "token.hpp"
+#include "declarations/declaration.hpp"
+#include "declarations/expr.hpp"
+#include "declarations/stmt.hpp"
+#include "declarations/token.hpp"
+
 using namespace std;
 class Parser {
  public:
@@ -18,7 +19,8 @@ class Parser {
     while (!isAtEnd()) {
       declarations.push_back(declaration());
       // current++;
-      // cout<<" current: "<<current<<" token: "<<tokens[current].lexeme<<endl;
+      cout << " current: " << current << " token: " << tokens[current].lexeme
+           << endl;
     }
     // cout<<"size"<<declarations.size()<<endl;
 
@@ -112,6 +114,7 @@ class Parser {
       return std::make_unique<LiteralExpr>();
     }
     if (match({TokenType::NUMBER, TokenType::STRING})) {
+      cout << "Number " << tokens[current].lexeme << endl;
       current++;
       return std::make_unique<LiteralExpr>(tokens[current - 1].literal);
     }
@@ -123,6 +126,34 @@ class Parser {
     if (match({TokenType::IDENTIFIER})) {
       // cout<<"hellp "<<tokens[current].lexeme<<endl;
       current++;
+      string identifier = tokens[current - 1].lexeme;
+      cout << "identier " << identifier << endl;
+      if (tokens[current].type == TokenType::LEFT_PAREN) {
+        vector<unique_ptr<Expr>> args;
+        cout << "heelo" << endl;
+        consume(TokenType::LEFT_PAREN, "expected '(' ");
+        while (tokens[current].type != TokenType::RIGHT_PAREN) {
+          cout << "toke s " << tokens[current].lexeme << endl;
+          unique_ptr<Expr> expr = expression();
+          cout<<"out expresso " <<tokens[current].type<<endl;
+
+          if (tokens[current].type == TokenType::COMMA) {
+            cout<<"consumed comma "<<endl;
+            consume(TokenType::COMMA, "expected ',' ");
+
+          } else if (tokens[current].type != TokenType::RIGHT_PAREN){
+            runtime_error("error while parsing arguments");}
+
+                      args.push_back(std::move(expr));
+
+            
+        }
+        consume(TokenType::RIGHT_PAREN, "expected ')' ");
+
+        cout << "args " << args.size() << endl;
+
+        return make_unique<CallExpr>(identifier, make_unique<vector<unique_ptr<Expr>>>(std::move(args)));
+      }
       return make_unique<IdentifierExpr>(std::move(tokens[current - 1].lexeme));
       // if(variables.find(tokens[current].lexeme)!=variables.end()){
       //   current++;
@@ -172,21 +203,17 @@ class Parser {
       consume(TokenType::RIGHT_PAREN, "Expected ')' after print");
 
       return make_unique<PrintStmt>(std::move(expr));
-    }
-    else if(match({TokenType::IDENTIFIER})) {
+    } else if (match({TokenType::IDENTIFIER}) &&
+               tokens[current + 1].type == TokenType::EQUAL) {
       string variableName = tokens[current].lexeme;
-        consume(TokenType::IDENTIFIER, "Expected 'IDENTIFIER' after print");
-        consume(TokenType::EQUAL, "Expected '=' after print");
+      consume(TokenType::IDENTIFIER, "Expected 'IDENTIFIER' after print");
+      consume(TokenType::EQUAL, "Expected '=' after print");
 
-        unique_ptr<Expr> expr = std::move(expression());
+      unique_ptr<Expr> expr = std::move(expression());
 
-        return make_unique<AssignStmt>(variableName,std::move(expr));
+      return make_unique<AssignStmt>(variableName, std::move(expr));
 
-
-
-
-    }
-     else {
+    } else {
       unique_ptr<Expr> expr = std::move(expression());
       return make_unique<ExprStmt>(std::move(expr));
     }
@@ -262,14 +289,34 @@ class Parser {
 
     string functionName = tokens[current++].lexeme;
     consume(TokenType::LEFT_PAREN, "Expected '('");
-    // consumeing arguments
-    vector<Paramter<any>> args = {};
-    // while(tokens[current].type!=TokenType::RIGHT_PAREN){
-    //   if(tokens[current].type){
+    // // consumeing arguments
+    // vector<Parameter> params ;
+    unique_ptr<vector<Parameter>> params=make_unique<vector<Parameter>>();
+    while (tokens[current].type != TokenType::RIGHT_PAREN) {
+      if (tokens[current].type != TokenType::IDENTIFIER) {
+        runtime_error("expected Identifier in function argument");
+      }
+      cout<<"identifier lexeme "<<tokens[current].lexeme<<endl;
+      Parameter param=Parameter(tokens[current++].lexeme);
+      params->push_back(param);
+            cout<<"identifier lexeme "<<tokens[current].lexeme<<endl;
 
-    //   }
+      if (tokens[current].type == TokenType::COMMA) {
+        consume(TokenType::COMMA, "expected ','in function argument");
+      } else if (!(tokens[current].type == TokenType::RIGHT_PAREN)) {
+        runtime_error("expected ',' or ') in function argument");
+      }
 
-    // }
+      cout << current << " curren " << endl;
+    }
+
+    consume(TokenType::RIGHT_PAREN, "Expected ')'");
+    unique_ptr<BlockDecl> block = getBlock();
+
+    // cout << "out" << endl;
+    
+    return std::move(make_unique<FuncDecl>(functionName, std::move(params),
+                                           std::move(block)));
   }
 
   unique_ptr<BlockDecl> getBlock() {
@@ -286,10 +333,4 @@ class Parser {
     consume(TokenType::RIGHT_BRACE, "Expected '}'");
     return make_unique<BlockDecl>(std::move(decls));
   }
-
-  // void consumeVaraibleType(){
-
-  //   if(tokens[current].type==TokenType::)
-
-  // }
 };

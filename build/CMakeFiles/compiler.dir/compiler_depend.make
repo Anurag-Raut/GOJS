@@ -220,14 +220,6 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/stl_tree.h \
   /usr/include/c++/11/bits/stl_set.h \
   /usr/include/c++/11/bits/stl_multiset.h \
-  ../tokenizer.cpp \
-  /usr/include/c++/11/optional \
-  /usr/include/c++/11/variant \
-  /usr/include/c++/11/bits/parse_numbers.h \
-  ../token.hpp \
-  /usr/include/c++/11/any \
-  ../utils.hpp \
-  ../parser.cpp \
   /usr/include/c++/11/memory \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
@@ -242,32 +234,42 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/bits/atomic_lockfree_defines.h \
   /usr/include/c++/11/backward/auto_ptr.h \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
-  ../declaration.hpp \
-  ../environment.hpp \
-  ../stmt.hpp \
-  ../expr.hpp \
+  ../declarations/token.hpp \
+  /usr/include/c++/11/any \
+  /usr/include/c++/11/optional \
+  /usr/include/c++/11/variant \
+  /usr/include/c++/11/bits/parse_numbers.h \
+  ../declarations/environment.hpp \
+  ../declarations/expr.hpp \
+  ../declarations/stmt.hpp \
+  ../declarations/declaration.hpp \
+  ../expr.cpp \
+  ../stmt.cpp \
+  ../declaration.cpp \
+  ../environment.cpp \
+  ../tokenizer.cpp \
+  ../utils.hpp \
+  ../parser.cpp \
   ../interpreter.cpp
 
 
 ../interpreter.cpp:
 
-../environment.hpp:
+../parser.cpp:
+
+/usr/include/c++/11/variant:
+
+/usr/include/c++/11/any:
+
+../declarations/token.hpp:
+
+/usr/include/c++/11/bits/parse_numbers.h:
+
+/usr/include/c++/11/bits/shared_ptr_atomic.h:
 
 /usr/include/c++/11/bits/stl_raw_storage_iter.h:
 
 /usr/include/c++/11/memory:
-
-../parser.cpp:
-
-/usr/include/c++/11/any:
-
-../token.hpp:
-
-/usr/include/c++/11/bits/shared_ptr_atomic.h:
-
-/usr/include/c++/11/bits/parse_numbers.h:
-
-/usr/include/c++/11/variant:
 
 /usr/include/c++/11/bits/stl_multiset.h:
 
@@ -294,6 +296,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/cwctype:
 
 /usr/include/c++/11/bits/locale_facets.h:
+
+../environment.cpp:
 
 /usr/include/c++/11/bits/basic_ios.h:
 
@@ -323,8 +327,6 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/cerrno:
 
-../stmt.hpp:
-
 /usr/include/stdio.h:
 
 /usr/include/c++/11/cstdio:
@@ -341,11 +343,15 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/bits/locale_classes.h:
 
+../declaration.cpp:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h:
 
 /usr/include/linux/errno.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h:
+
+../declarations/expr.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
@@ -423,7 +429,11 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/vector:
 
+../stmt.cpp:
+
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+../declarations/environment.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
@@ -457,11 +467,11 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/stdlib.h:
 
-../declaration.hpp:
-
 /usr/include/c++/11/debug/assertions.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
+
+../declarations/stmt.hpp:
 
 /usr/include/c++/11/bits/shared_ptr.h:
 
@@ -591,6 +601,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/bits/stl_heap.h:
 
+../declarations/declaration.hpp:
+
 /usr/include/c++/11/bits/basic_string.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
@@ -687,8 +699,6 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/bits/functional_hash.h:
 
-../expr.hpp:
-
 /usr/include/c++/11/bits/string_view.tcc:
 
 /usr/include/c++/11/bits/hash_bytes.h:
@@ -736,6 +746,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/wchar.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
+
+../expr.cpp:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 

@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "stmt.hpp"
-#include "token.hpp"
+#include "declarations/stmt.hpp"
+#include "declarations/token.hpp"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ VarDecl::VarDecl(string name, unique_ptr<Expr> value) {
   this->value = std::move(value);
 }
 
-void VarDecl::execute(Environment *env) {
+void VarDecl::execute(Environment *env)  {
   // cout<<"doing var declartion"<<endl;
   // Literal l1=value->evaluate(env);
   // l1.printLiteral();
@@ -78,13 +78,30 @@ void WhileBlock::execute(Environment *env) {
 }
 
 FuncDecl::FuncDecl(string name,
-                   unique_ptr<vector<unique_ptr<Parameter>>> parameters,
+                   unique_ptr<vector<Parameter>> parameters,
                    unique_ptr<BlockDecl> block) {
   this->name = name;
   this->parameters = std::move(parameters);
   this->block = std::move(block);
 }
-void FuncDecl::execute(Environment *env) { block->execute(env); }
+void FuncDecl::executeArgs(unique_ptr<vector<unique_ptr<Expr>>> args, Environment *env) {
+  vector<Literal> lits;
+  Environment *childEnv = new Environment();
+  childEnv->parent = env;
+  for (int index = 0; index < args->size(); index++) {
+    // lits.push_back(arg->evaluate(env));
+    cout<<"paramters "<<parameters->at(index).name<<endl;
+    childEnv->setVariable(parameters->at(index).name,
+                          args->at(index)->evaluate(childEnv));
+  }
+
+
+  block->execute(childEnv);
+}
+
+void FuncDecl::execute(Environment* env) {
+    env->setFunction(this->name, std::unique_ptr<FuncDecl>(this));
+}
 
 // getVariable(){
 

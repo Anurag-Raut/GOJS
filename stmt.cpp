@@ -5,6 +5,8 @@
 #include <memory>
 
 #include "declarations/token.hpp"
+#include "declarations/expr.hpp"
+#include "declarations/environment.hpp"
 
 using namespace std;
 

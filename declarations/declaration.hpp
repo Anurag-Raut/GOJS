@@ -3,20 +3,21 @@
 #include <unordered_map>
 #include <vector>
 
-#include "environment.hpp"
+
 #include "stmt.hpp"
+#include"expr.hpp"
 #include "token.hpp"
 
 using namespace std;
 
 class Parameter {
  public:
-  string type;
+
   string name;
 
-  Parameter(string name, string type) {
+  Parameter(string name) {
     this->name = name;
-    this->type = type;
+ 
   }
 };
 
@@ -24,17 +25,11 @@ class Decl {
  public:
   // virtual void execute() = 0;
   virtual void execute(Environment *globalEnv) = 0;
+  // virtual void execute(vector<unique_ptr<Expr>> args, Environment *globalEnv) =0;
+
 };
 
-class FuncDecl : public Decl {
- public:
-  string name;
-  vector<unique_ptr<Stmt>> statements;
 
-  FuncDecl(string name, vector<unique_ptr<Stmt>> statements);
-
-  void execute(Environment *env);
-};
 
 class Statement : public Decl {
  public:
@@ -42,7 +37,7 @@ class Statement : public Decl {
 
   Statement(unique_ptr<Stmt> stmt);
 
-  void execute(Environment *env);
+  void execute(Environment *env) override;
 };
 
 class VarDecl : public Decl {
@@ -52,7 +47,7 @@ class VarDecl : public Decl {
 
   VarDecl(string name, unique_ptr<Expr> value);
 
-  void execute(Environment *env);
+  void execute(Environment *env) override;
 };
 
 class BlockDecl : public Decl {
@@ -61,7 +56,8 @@ class BlockDecl : public Decl {
 
   BlockDecl(unique_ptr<vector<unique_ptr<Decl>>> decls);
 
-  void execute(Environment *env);
+  void execute(Environment *env) override;
+  
 };
 
 class IfDecl : public Decl {
@@ -74,7 +70,7 @@ class IfDecl : public Decl {
          unique_ptr<BlockDecl> elseBlock);
   IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock);
 
-  void execute(Environment *env);
+  void execute(Environment *env) override;
 };
 
 class WhileBlock : public Decl {
@@ -84,22 +80,22 @@ class WhileBlock : public Decl {
 
   WhileBlock(unique_ptr<Expr> expr, unique_ptr<BlockDecl> block);
 
-  void execute(Environment *env);
+  void execute(Environment *env) override;
 };
 
 class FuncDecl : public Decl {
  public:
   string name;
 
-  unique_ptr<vector<unique_ptr<Parameter>>> parameters;
+  unique_ptr<vector<Parameter>> parameters;
   unique_ptr<BlockDecl> block;
 
-  FuncDecl(string name, unique_ptr<vector<unique_ptr<Parameter>>> parameters,
+  FuncDecl(string name, unique_ptr<vector<Parameter>> parameters,
            unique_ptr<BlockDecl> block);
-  void execute(Environment *env);
+  void execute(Environment *env) override;
+
+  void executeArgs(unique_ptr<vector<unique_ptr<Expr>>>args,Environment *env) ;
 
 };
 
-// getVariable(){
 
-// }

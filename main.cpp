@@ -4,11 +4,32 @@
 #include <string>
 #include <vector>
 #include <set>
+#include<memory>
+#include "declarations/token.hpp"
+#include "declarations/environment.hpp"
+#include "declarations/expr.hpp"
+#include "declarations/stmt.hpp"
+#include "declarations/declaration.hpp"
+#include "expr.cpp"
+#include "stmt.cpp"
+
+
+#include "declarations/expr.hpp"
+#include "declarations/stmt.hpp"
+
+// #include "declarations/token.hpp"
+// #include "declaration.cpp"
+
+#include "declaration.cpp"
+#include "environment.cpp"
+
 #include "tokenizer.cpp"
+// #include "environment.cpp"
+
+
+
 #include "parser.cpp"
-#include "environment.hpp"
 #include "interpreter.cpp"
-#include "declaration.hpp"
 // #include "globals.hpp"
 
 using namespace std;
@@ -38,7 +59,7 @@ int main(int argc, char *argv[]) {
   Parser parser(tokenizer.tokens);
   vector<unique_ptr<Decl>> statements = parser.parse();
   
-  // cout<<"parsing done"<<endl;
+  // // cout<<"parsing done"<<endl;
 
   
 

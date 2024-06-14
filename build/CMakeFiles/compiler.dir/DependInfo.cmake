@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/anurag/projects/lox-compiler/main.cpp" "CMakeFiles/compiler.dir/main.cpp.o" "gcc" "CMakeFiles/compiler.dir/main.cpp.o.d"
+  "/home/anurag/projects/refactor-lox/main.cpp" "CMakeFiles/compiler.dir/main.cpp.o" "gcc" "CMakeFiles/compiler.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

@@ -1,10 +1,8 @@
 // #include <any>
 #include "declarations/expr.hpp"
-
+#include "declarations/declaration.hpp"
 #include <memory>
 #include <stdexcept>
-
-
 
 using namespace std;
 
@@ -193,3 +191,17 @@ GroupingExpr::GroupingExpr(std::unique_ptr<Expr> expr) {
 }
 
 Literal GroupingExpr::evaluate(Environment *env) { return expr->evaluate(env); }
+
+CallExpr::CallExpr(string identidier, unique_ptr<vector<unique_ptr<Expr>>> args) {
+  this->identidier = identidier;
+  this->args = std::move(args);
+}
+
+Literal CallExpr::evaluate(Environment *env) {
+    unique_ptr<FuncDecl> func= move(env->getFunction(this->identidier,env));
+
+    func->executeArgs(std::move(this->args),env);
+    
+    return Literal("nullopt");
+}
+

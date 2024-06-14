@@ -2,8 +2,8 @@
 #include <iostream>
 #include <memory>
 
-#include "declaration.hpp"
-#include "expr.hpp"
+#include "declarations/declaration.hpp"
+#include "declarations/expr.hpp"
 
 using namespace std;
 class Interpreter {
@@ -15,6 +15,8 @@ class Interpreter {
     this->declarations = std::move(declarations);
   }
 
+ 
+
   void evaluate() {
     //     Literal literal = stmts->evaluate();
     // cout<<"evaluated value"<<endl;
@@ -23,10 +25,16 @@ class Interpreter {
 
     //    Enviliteral.printLiteral();
     Environment *globalEnv = new Environment();
+
+  
     for (auto &decl : declarations) {
       decl->execute(globalEnv);
+      cout << "hello" << endl;
     }
+
+    // delete globalEnv;
 
     // }
   }
 };
+
