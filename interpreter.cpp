@@ -29,7 +29,7 @@ class Interpreter {
   
     for (auto &decl : declarations) {
       decl->execute(globalEnv);
-      cout << "hello" << endl;
+      // cout << "hello" << endl;
     }
 
     // delete globalEnv;

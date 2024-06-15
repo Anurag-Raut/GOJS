@@ -7,6 +7,7 @@
 #include "declarations/token.hpp"
 #include "declarations/expr.hpp"
 #include "declarations/environment.hpp"
+#include "declarations/ReturnExpection.hpp"
 
 using namespace std;
 
@@ -40,3 +41,14 @@ AssignStmt::AssignStmt(string variableName, unique_ptr<Expr> expr) {
 void AssignStmt::evaluate(Environment *env) {
   env->assignValue(variableName, expr->evaluate(env), env);
 }
+
+ReturnStmt::ReturnStmt(unique_ptr<Expr> expr){
+  this->expr = std::move(expr);
+}
+
+
+  void ReturnStmt::evaluate(Environment *env){
+    Literal l=expr->evaluate(env);
+    ReturnException r (l);
+    throw r;
+  }

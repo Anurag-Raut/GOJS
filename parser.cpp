@@ -19,8 +19,8 @@ class Parser {
     while (!isAtEnd()) {
       declarations.push_back(declaration());
       // current++;
-      cout << " current: " << current << " token: " << tokens[current].lexeme
-           << endl;
+      // cout << " current: " << current << " token: " << tokens[current].lexeme
+      //      << endl;
     }
     // cout<<"size"<<declarations.size()<<endl;
 
@@ -213,7 +213,14 @@ class Parser {
 
       return make_unique<AssignStmt>(variableName, std::move(expr));
 
-    } else {
+    } 
+    else if(match({TokenType::RETURN})){
+      current++;
+            unique_ptr<Expr> expr = std::move(expression());
+
+      return make_unique<ReturnStmt>(std::move(expr));
+    }
+    else {
       unique_ptr<Expr> expr = std::move(expression());
       return make_unique<ExprStmt>(std::move(expr));
     }
@@ -293,17 +300,17 @@ class Parser {
     // vector<Parameter> params ;
     unique_ptr<vector<Parameter>> params=make_unique<vector<Parameter>>();
     while (tokens[current].type != TokenType::RIGHT_PAREN) {
+
       if (tokens[current].type != TokenType::IDENTIFIER) {
         runtime_error("expected Identifier in function argument");
       }
-      cout<<"identifier lexeme "<<tokens[current].lexeme<<endl;
+
       Parameter param=Parameter(tokens[current++].lexeme);
       params->push_back(param);
-            cout<<"identifier lexeme "<<tokens[current].lexeme<<endl;
 
       if (tokens[current].type == TokenType::COMMA) {
         consume(TokenType::COMMA, "expected ','in function argument");
-      } else if (!(tokens[current].type == TokenType::RIGHT_PAREN)) {
+      } else if ((tokens[current].type != TokenType::RIGHT_PAREN)) {
         runtime_error("expected ',' or ') in function argument");
       }
 
@@ -312,8 +319,8 @@ class Parser {
 
     consume(TokenType::RIGHT_PAREN, "Expected ')'");
     unique_ptr<BlockDecl> block = getBlock();
+    cout << "out" << endl;
 
-    // cout << "out" << endl;
     
     return std::move(make_unique<FuncDecl>(functionName, std::move(params),
                                            std::move(block)));

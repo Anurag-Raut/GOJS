@@ -57,6 +57,8 @@ class BlockDecl : public Decl {
   BlockDecl(unique_ptr<vector<unique_ptr<Decl>>> decls);
 
   void execute(Environment *env) override;
+
+  Literal executeFunc(Environment *env);
   
 };
 
@@ -94,7 +96,7 @@ class FuncDecl : public Decl {
            unique_ptr<BlockDecl> block);
   void execute(Environment *env) override;
 
-  void executeArgs(unique_ptr<vector<unique_ptr<Expr>>>args,Environment *env) ;
+  Literal executeArgs(unique_ptr<vector<unique_ptr<Expr>>>args,Environment *env) ;
 
 };
 

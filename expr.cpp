@@ -200,8 +200,8 @@ CallExpr::CallExpr(string identidier, unique_ptr<vector<unique_ptr<Expr>>> args)
 Literal CallExpr::evaluate(Environment *env) {
     unique_ptr<FuncDecl> func= move(env->getFunction(this->identidier,env));
 
-    func->executeArgs(std::move(this->args),env);
+    Literal val=func->executeArgs(std::move(this->args),env);
     
-    return Literal("nullopt");
+    return val;
 }
 

@@ -7,6 +7,7 @@
 
 #include "declarations/stmt.hpp"
 #include "declarations/token.hpp"
+#include "declarations/ReturnExpection.hpp"
 
 using namespace std;
 
@@ -38,6 +39,8 @@ void BlockDecl::execute(Environment *env) {
     decl->execute(childEnv);
   }
 }
+
+
 
 IfDecl::IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock,
                unique_ptr<BlockDecl> elseBlock) {
@@ -79,24 +82,38 @@ void WhileBlock::execute(Environment *env) {
 
 FuncDecl::FuncDecl(string name,
                    unique_ptr<vector<Parameter>> parameters,
-                   unique_ptr<BlockDecl> block) {
+                   unique_ptr<BlockDecl> block
+                  //  ,unique_ptr<vector<type_index>> returnTypes
+                   ) {
   this->name = name;
   this->parameters = std::move(parameters);
   this->block = std::move(block);
+  // this->returnTypes=std::move(returnTypes);
 }
-void FuncDecl::executeArgs(unique_ptr<vector<unique_ptr<Expr>>> args, Environment *env) {
+Literal FuncDecl::executeArgs(unique_ptr<vector<unique_ptr<Expr>>> args, Environment *env) {
   vector<Literal> lits;
   Environment *childEnv = new Environment();
   childEnv->parent = env;
   for (int index = 0; index < args->size(); index++) {
     // lits.push_back(arg->evaluate(env));
-    cout<<"paramters "<<parameters->at(index).name<<endl;
+    // cout<<"paramters "<<parameters->at(index).name<<endl;
     childEnv->setVariable(parameters->at(index).name,
                           args->at(index)->evaluate(childEnv));
   }
 
+  try{
+    block->execute(childEnv);
+  }
+  catch(ReturnException& v){
+      return v.value;
 
-  block->execute(childEnv);
+  }
+
+
+  return Literal();
+
+
+
 }
 
 void FuncDecl::execute(Environment* env) {

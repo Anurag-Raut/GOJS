@@ -41,3 +41,12 @@ class AssignStmt : public Stmt {
   void evaluate(Environment *env) ;
 };
 
+class ReturnStmt : public Stmt {
+  public:
+    unique_ptr <Expr> expr;
+
+    ReturnStmt(unique_ptr <Expr> expr);
+  void evaluate(Environment *env) ;
+
+};
+

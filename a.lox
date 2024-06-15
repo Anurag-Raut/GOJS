@@ -1,7 +1,8 @@
 func add(a,b)
 {
-    print (a+b)
-   
+    return a+" "+b
 }
 
-add(8,9)
+var b = add("asdasd","asds")
+
+print(b)
