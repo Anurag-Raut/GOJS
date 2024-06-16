@@ -68,6 +68,7 @@ class Literal {
   Literal(double d) : value(d) {}
   Literal(bool b) : value(b) {}
   Literal() : value(nullopt) {}
+  Literal(vector<Literal> v) :value(v) {}
 
   void printLiteral() {
     if (value.type() == typeid(string)) {

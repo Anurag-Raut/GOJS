@@ -57,13 +57,13 @@ int main(int argc, char *argv[]) {
   Tokenizer tokenizer(fileinput);
   tokenizer.display();
   Parser parser(tokenizer.tokens);
-  vector<unique_ptr<Decl>> statements = parser.parse();
+  vector<shared_ptr<Decl>> statements = parser.parse();
   
-  // // cout<<"parsing done"<<endl;
+  cout<<"parsing done"<<endl;
 
   
 
-  Interpreter interpreter(std::move(statements));
+  Interpreter interpreter((statements));
   interpreter.evaluate();
 
   

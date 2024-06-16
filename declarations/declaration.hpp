@@ -25,7 +25,7 @@ class Decl {
  public:
   // virtual void execute() = 0;
   virtual void execute(Environment *globalEnv) = 0;
-  // virtual void execute(vector<unique_ptr<Expr>> args, Environment *globalEnv) =0;
+  // virtual void execute(vector<shared_ptr<Expr>> args, Environment *globalEnv) =0;
 
 };
 
@@ -33,9 +33,9 @@ class Decl {
 
 class Statement : public Decl {
  public:
-  unique_ptr<Stmt> stmt;
+  shared_ptr<Stmt> stmt;
 
-  Statement(unique_ptr<Stmt> stmt);
+  Statement(shared_ptr<Stmt> stmt);
 
   void execute(Environment *env) override;
 };
@@ -43,18 +43,18 @@ class Statement : public Decl {
 class VarDecl : public Decl {
  public:
   string name;
-  unique_ptr<Expr> value;
+  shared_ptr<Expr> value;
 
-  VarDecl(string name, unique_ptr<Expr> value);
+  VarDecl(string name, shared_ptr<Expr> value);
 
   void execute(Environment *env) override;
 };
 
 class BlockDecl : public Decl {
  public:
-  unique_ptr<vector<unique_ptr<Decl>>> decls;
+  shared_ptr<vector<shared_ptr<Decl>>> decls;
 
-  BlockDecl(unique_ptr<vector<unique_ptr<Decl>>> decls);
+  BlockDecl(shared_ptr<vector<shared_ptr<Decl>>> decls);
 
   void execute(Environment *env) override;
 
@@ -64,23 +64,37 @@ class BlockDecl : public Decl {
 
 class IfDecl : public Decl {
  public:
-  unique_ptr<Expr> expr;
-  unique_ptr<BlockDecl> ifBlock;
-  unique_ptr<BlockDecl> elseBlock = NULL;
+  shared_ptr<Expr> expr;
+  shared_ptr<BlockDecl> ifBlock;
+  shared_ptr<BlockDecl> elseBlock = NULL;
 
-  IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock,
-         unique_ptr<BlockDecl> elseBlock);
-  IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock);
+  IfDecl(shared_ptr<Expr> expr, shared_ptr<BlockDecl> ifBlock,
+         shared_ptr<BlockDecl> elseBlock);
+  IfDecl(shared_ptr<Expr> expr, shared_ptr<BlockDecl> ifBlock);
 
   void execute(Environment *env) override;
 };
 
 class WhileBlock : public Decl {
  public:
-  unique_ptr<Expr> expr;
-  unique_ptr<BlockDecl> block;
+  shared_ptr<Expr> expr;
+  shared_ptr<BlockDecl> block;
 
-  WhileBlock(unique_ptr<Expr> expr, unique_ptr<BlockDecl> block);
+  WhileBlock(shared_ptr<Expr> expr, shared_ptr<BlockDecl> block);
+
+  void execute(Environment *env) override;
+};
+
+class ForBlock : public Decl {
+ public:
+  shared_ptr<Decl> declaration;
+  shared_ptr<Expr> condition;
+    shared_ptr<Stmt> doStatement;
+
+
+  shared_ptr<BlockDecl> block;
+
+  ForBlock(shared_ptr<Decl> declaration,shared_ptr<Expr> condition,shared_ptr<Stmt> doStatement, shared_ptr<BlockDecl> block);
 
   void execute(Environment *env) override;
 };
@@ -89,14 +103,14 @@ class FuncDecl : public Decl {
  public:
   string name;
 
-  unique_ptr<vector<Parameter>> parameters;
-  unique_ptr<BlockDecl> block;
+  shared_ptr<vector<Parameter>> parameters;
+  shared_ptr<BlockDecl> block;
 
-  FuncDecl(string name, unique_ptr<vector<Parameter>> parameters,
-           unique_ptr<BlockDecl> block);
+  FuncDecl(string name, shared_ptr<vector<Parameter>> parameters,
+           shared_ptr<BlockDecl> block);
   void execute(Environment *env) override;
 
-  Literal executeArgs(unique_ptr<vector<unique_ptr<Expr>>>args,Environment *env) ;
+  Literal executeArgs(shared_ptr<vector<shared_ptr<Expr>>>args,Environment *env) ;
 
 };
 

@@ -6,10 +6,10 @@
 
 using namespace std;
 
-BinaryExpr::BinaryExpr(std::unique_ptr<Expr> left, Token op,
-                       std::unique_ptr<Expr> right) {
-  this->left = std::move(left);
-  this->right = std::move(right);
+BinaryExpr::BinaryExpr(std::shared_ptr<Expr> left, Token op,
+                       std::shared_ptr<Expr> right) {
+  this->left = (left);
+  this->right = (right);
   this->op = op;
 }
 template <typename T>
@@ -148,8 +148,8 @@ Literal BinaryExpr::evaluate(Environment *env) {
   }
 }
 
-UnaryExpr::UnaryExpr(Token op, std::unique_ptr<Expr> right) {
-  this->right = std::move(right);
+UnaryExpr::UnaryExpr(Token op, std::shared_ptr<Expr> right) {
+  this->right = (right);
   this->op = op;
 }
 
@@ -186,21 +186,23 @@ Literal IdentifierExpr::evaluate(Environment *env) {
   return env->getVariable(name, env);
 }
 
-GroupingExpr::GroupingExpr(std::unique_ptr<Expr> expr) {
-  this->expr = std::move(expr);
+GroupingExpr::GroupingExpr(std::shared_ptr<Expr> expr) {
+  this->expr = (expr);
 }
 
 Literal GroupingExpr::evaluate(Environment *env) { return expr->evaluate(env); }
 
-CallExpr::CallExpr(string identidier, unique_ptr<vector<unique_ptr<Expr>>> args) {
+CallExpr::CallExpr(string identidier, shared_ptr<vector<shared_ptr<Expr>>> args) {
   this->identidier = identidier;
-  this->args = std::move(args);
+  this->args = (args);
 }
 
 Literal CallExpr::evaluate(Environment *env) {
-    unique_ptr<FuncDecl> func= move(env->getFunction(this->identidier,env));
+    shared_ptr<FuncDecl> func= env->getFunction(this->identidier,env);
 
-    Literal val=func->executeArgs(std::move(this->args),env);
+    Literal val=func->executeArgs((this->args),env);
+    // cout<<"received call value for "<<identidier<<" is :";
+    // val.printLiteral();
     
     return val;
 }

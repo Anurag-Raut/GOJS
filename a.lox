@@ -1,8 +1,28 @@
-func add(a,b)
-{
-    return a+" "+b
+func binarySearch(arr, left, right, x) {
+   if (right >= left) {
+      var mid = left + (right - left) / 2
+
+      if (arr[mid] == x) {
+         return mid
+      }
+
+      if (arr[mid] > x) {
+         return binarySearch(arr, left, mid - 1, x)
+      }
+
+      return binarySearch(arr, mid + 1, right, x)
+   }
+
+   return -1
 }
 
-var b = add("asdasd","asds")
+var arr = [2, 3, 4, 10, 40]
+var x = 10
+var n = arr.length
+var result = binarySearch(arr, 0, n - 1, x)
 
-print(b)
+if (result != -1) {
+   print "Element is present at index " + result
+} else {
+   print "Element is not present in array"
+}

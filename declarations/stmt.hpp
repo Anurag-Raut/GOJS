@@ -16,36 +16,36 @@ class Stmt {
 
 class ExprStmt : public Stmt {
  public:
-  unique_ptr<Expr> expr;
-  ExprStmt(unique_ptr<Expr> expr) ;
+  shared_ptr<Expr> expr;
+  ExprStmt(shared_ptr<Expr> expr) ;
 
   void evaluate(Environment *env);
 };
 
 class PrintStmt : public Stmt {
  public:
-  unique_ptr<Expr> expr;
+  shared_ptr<Expr> expr;
 
-  PrintStmt(unique_ptr<Expr> expr);
+  PrintStmt(shared_ptr<Expr> expr);
 
   void evaluate(Environment *env) ;
 };
 
 class AssignStmt : public Stmt {
  public:
-  unique_ptr<Expr> expr;
+  shared_ptr<Expr> expr;
   string variableName;
 
-  AssignStmt(string variableName, unique_ptr<Expr> expr);
+  AssignStmt(string variableName, shared_ptr<Expr> expr);
 
   void evaluate(Environment *env) ;
 };
 
 class ReturnStmt : public Stmt {
   public:
-    unique_ptr <Expr> expr;
+    shared_ptr <Expr> expr;
 
-    ReturnStmt(unique_ptr <Expr> expr);
+    ReturnStmt(shared_ptr <Expr> expr);
   void evaluate(Environment *env) ;
 
 };

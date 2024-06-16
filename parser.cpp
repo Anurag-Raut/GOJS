@@ -14,8 +14,8 @@ class Parser {
   vector<Token> tokens;
   Parser(vector<Token> tokens) { this->tokens = tokens; }
 
-  vector<unique_ptr<Decl>> parse() {
-    vector<unique_ptr<Decl>> declarations;
+  vector<shared_ptr<Decl>> parse() {
+    vector<shared_ptr<Decl>> declarations;
     while (!isAtEnd()) {
       declarations.push_back(declaration());
       // current++;
@@ -27,138 +27,135 @@ class Parser {
     return declarations;
   }
 
-  unique_ptr<Expr> expression() { return equality(); }
+  shared_ptr<Expr> expression() { return equality(); }
 
-  unique_ptr<Expr> equality() {
-    unique_ptr<Expr> left = comparison();
+  shared_ptr<Expr> equality() {
+    shared_ptr<Expr> left = comparison();
     if (match({TokenType::EQUAL_EQUAL, TokenType::BANG_EQUAL})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = equality();
+      shared_ptr<Expr> right = equality();
 
-      return std::make_unique<BinaryExpr>(std::move(left), op,
-                                          std::move(right));
+      return std::make_shared<BinaryExpr>((left), op, (right));
     }
 
     return left;
   }
 
-  unique_ptr<Expr> comparison() {
-    unique_ptr<Expr> left = term();
+  shared_ptr<Expr> comparison() {
+    shared_ptr<Expr> left = term();
     if (match({TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS,
                TokenType::LESS_EQUAL})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = comparison();
-
-      return std::make_unique<BinaryExpr>(std::move(left), op,
-                                          std::move(right));
+      // cout << "OPPP " << op.lexeme << endl;
+      shared_ptr<Expr> right = comparison();
+      return std::make_shared<BinaryExpr>((left), op, (right));
     }
 
     return left;
   }
 
-  unique_ptr<Expr> term() {
-    unique_ptr<Expr> left = factor();
+  shared_ptr<Expr> term() {
+    shared_ptr<Expr> left = factor();
     if (match({TokenType::PLUS, TokenType::MINUS})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = term();
+      shared_ptr<Expr> right = term();
 
-      return std::make_unique<BinaryExpr>(std::move(left), op,
-                                          std::move(right));
+      return std::make_shared<BinaryExpr>((left), op, (right));
     }
 
     return left;
   }
 
-  unique_ptr<Expr> factor() {
-    unique_ptr<Expr> left = unary();
+  shared_ptr<Expr> factor() {
+    shared_ptr<Expr> left = unary();
     if (match({TokenType::STAR, TokenType::SLASH})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = factor();
+      shared_ptr<Expr> right = factor();
 
-      return std::make_unique<BinaryExpr>(std::move(left), op,
-                                          std::move(right));
+      return std::make_shared<BinaryExpr>((left), op, (right));
     }
 
     return left;
   }
 
-  unique_ptr<Expr> unary() {
+  shared_ptr<Expr> unary() {
     // Expr left = unary();
     if (match({TokenType::BANG})) {
       Token op = tokens[current];
       current++;
-      unique_ptr<Expr> right = unary();
+      shared_ptr<Expr> right = unary();
 
-      return std::make_unique<UnaryExpr>(std::move(op), std::move(right));
+      return std::make_shared<UnaryExpr>((op), (right));
     }
     return primary();
   }
 
-  unique_ptr<Expr> primary() {
+  shared_ptr<Expr> primary() {
     // cout<<tokens[current].lexeme<<endl;
 
     if (match({TokenType::FALSE})) {
       current++;
-      return std::make_unique<LiteralExpr>(false);
+      return std::make_shared<LiteralExpr>(false);
     }
     if (match({TokenType::TRUE})) {
       current++;
-      return std::make_unique<LiteralExpr>(true);
+      return std::make_shared<LiteralExpr>(true);
     }
     if (match({TokenType::NIL})) {
       current++;
-      return std::make_unique<LiteralExpr>();
+      return std::make_shared<LiteralExpr>();
     }
     if (match({TokenType::NUMBER, TokenType::STRING})) {
-      cout << "Number " << tokens[current].lexeme << endl;
+      // cout << "Number " << tokens[current].lexeme << endl;
       current++;
-      return std::make_unique<LiteralExpr>(tokens[current - 1].literal);
+      return std::make_shared<LiteralExpr>(tokens[current - 1].literal);
     }
     if (match({TokenType::LEFT_PAREN})) {
-      unique_ptr<Expr> expr = expression();
+      shared_ptr<Expr> expr = expression();
       consume(RIGHT_PAREN, "Expect ')' after expression.");
-      return std::make_unique<GroupingExpr>(std::move(expr));
+      return std::make_shared<GroupingExpr>((expr));
     }
     if (match({TokenType::IDENTIFIER})) {
       // cout<<"hellp "<<tokens[current].lexeme<<endl;
       current++;
       string identifier = tokens[current - 1].lexeme;
-      cout << "identier " << identifier << endl;
+      // cout << "identier " << identifier << endl;
+      // cout << tokens[current].lexeme << endl;
       if (tokens[current].type == TokenType::LEFT_PAREN) {
-        vector<unique_ptr<Expr>> args;
-        cout << "heelo" << endl;
+        vector<shared_ptr<Expr>> args;
+        // cout << "heelo" << endl;
         consume(TokenType::LEFT_PAREN, "expected '(' ");
         while (tokens[current].type != TokenType::RIGHT_PAREN) {
-          cout << "toke s " << tokens[current].lexeme << endl;
-          unique_ptr<Expr> expr = expression();
-          cout<<"out expresso " <<tokens[current].type<<endl;
+          // cout << "toke s " << tokens[current].lexeme << endl;
+          shared_ptr<Expr> expr = expression();
+          // cout<<"out expresso " <<tokens[current].type<<endl;
 
           if (tokens[current].type == TokenType::COMMA) {
-            cout<<"consumed comma "<<endl;
+            // cout << "consumed comma " << endl;
             consume(TokenType::COMMA, "expected ',' ");
 
-          } else if (tokens[current].type != TokenType::RIGHT_PAREN){
-            runtime_error("error while parsing arguments");}
+          } else if (tokens[current].type != TokenType::RIGHT_PAREN) {
+            runtime_error("error while parsing arguments");
+          }
 
-                      args.push_back(std::move(expr));
-
-            
+          args.push_back((expr));
         }
         consume(TokenType::RIGHT_PAREN, "expected ')' ");
 
-        cout << "args " << args.size() << endl;
+        // cout << "args " << args.size() << endl;
 
-        return make_unique<CallExpr>(identifier, make_unique<vector<unique_ptr<Expr>>>(std::move(args)));
+        return make_shared<CallExpr>(
+            identifier, make_shared<vector<shared_ptr<Expr>>>((args)));
       }
-      return make_unique<IdentifierExpr>(std::move(tokens[current - 1].lexeme));
+      return make_shared<IdentifierExpr>((tokens[current - 1].lexeme));
       // if(variables.find(tokens[current].lexeme)!=variables.end()){
       //   current++;
       //   cout<<"got hrerere"<<endl;
-      //   return std::make_unique<LiteralExpr>(variables[tokens[current -
+      //   return std::make_shared<LiteralExpr>(variables[tokens[current -
       //   1].lexeme]);
       // }
       // else{
@@ -194,39 +191,37 @@ class Parser {
   //  private:
   int current = 0;
 
-  unique_ptr<Stmt> statement() {
+  shared_ptr<Stmt> statement() {
     if (match({TokenType::PRINT})) {
       current += 1;
       consume(TokenType::LEFT_PAREN, "Expected '(' after print");
-      unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
       // cout<<"toke "<<tokens[current].lexeme<<endl;
       consume(TokenType::RIGHT_PAREN, "Expected ')' after print");
 
-      return make_unique<PrintStmt>(std::move(expr));
+      return make_shared<PrintStmt>((expr));
     } else if (match({TokenType::IDENTIFIER}) &&
                tokens[current + 1].type == TokenType::EQUAL) {
       string variableName = tokens[current].lexeme;
       consume(TokenType::IDENTIFIER, "Expected 'IDENTIFIER' after print");
       consume(TokenType::EQUAL, "Expected '=' after print");
 
-      unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
 
-      return make_unique<AssignStmt>(variableName, std::move(expr));
+      return make_shared<AssignStmt>(variableName, (expr));
 
-    } 
-    else if(match({TokenType::RETURN})){
+    } else if (match({TokenType::RETURN})) {
       current++;
-            unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
 
-      return make_unique<ReturnStmt>(std::move(expr));
-    }
-    else {
-      unique_ptr<Expr> expr = std::move(expression());
-      return make_unique<ExprStmt>(std::move(expr));
+      return make_shared<ReturnStmt>((expr));
+    } else {
+      shared_ptr<Expr> expr = (expression());
+      return make_shared<ExprStmt>((expr));
     }
   }
 
-  unique_ptr<Decl> declaration() {
+  shared_ptr<Decl> declaration() {
     if (match({TokenType::VAR})) {
       // cout<<"var"<<endl;
       current += 1;
@@ -234,46 +229,59 @@ class Parser {
       string name = tokens[current].lexeme;
       current++;
       consume(TokenType::EQUAL, "Expected a \"=\" ");
-      unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
 
-      return make_unique<VarDecl>(name, std::move(expr));
+      return make_shared<VarDecl>(name, (expr));
     } else if (match({TokenType::FUNC})) {
       return getFunctionDecl();
     } else if (match({TokenType::IF})) {
       consume(TokenType::IF, "Expected \"if\" ");
       consume(TokenType::LEFT_PAREN, "Expected \"(\" ");
 
-      unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
 
       consume(TokenType::RIGHT_PAREN, "Expected \")\" ");
 
-      unique_ptr<BlockDecl> ifBlock = std::move(getBlock());
-      if (TokenType::ELSE) {
+      shared_ptr<BlockDecl> ifBlock = (getBlock());
+      if (match({TokenType::ELSE})) {
         consume(TokenType::ELSE, "Expected \")\" ");
-        unique_ptr<BlockDecl> elseBlock = std::move(getBlock());
+        shared_ptr<BlockDecl> elseBlock = (getBlock());
 
-        return make_unique<IfDecl>(std::move(expr), std::move(ifBlock),
-                                   std::move(elseBlock));
+        return make_shared<IfDecl>((expr), (ifBlock), (elseBlock));
       }
-      return make_unique<IfDecl>(std::move(expr), std::move(ifBlock));
+      return make_shared<IfDecl>((expr), (ifBlock));
 
     } else if (match({TokenType::WHILE})) {
       consume(TokenType::WHILE, "Expected \"while\" ");
       consume(TokenType::LEFT_PAREN, "Expected \"while\" ");
-      unique_ptr<Expr> expr = std::move(expression());
+      shared_ptr<Expr> expr = (expression());
 
       consume(TokenType::RIGHT_PAREN, "Expected \"while\" ");
-      unique_ptr<BlockDecl> block = std::move(getBlock());
+      shared_ptr<BlockDecl> block = (getBlock());
 
-      return make_unique<WhileBlock>(std::move(expr), std::move(block));
+      return make_shared<WhileBlock>((expr), (block));
+
+    } else if (match({TokenType::FOR})) {
+      // cout<<"for"<<endl;
+      consume(TokenType::FOR, "Expected \"for\" ");
+      consume(TokenType::LEFT_PAREN, "Expected \"for\" ");
+      shared_ptr<Decl> decl = declaration();
+      consume(TokenType::SEMICOLON, "Expected \";\" ");
+      shared_ptr<Expr> condition = expression();
+      consume(TokenType::SEMICOLON, "Expected \";\" ");
+      shared_ptr<Stmt> stmt = statement();
+      consume(TokenType::RIGHT_PAREN, "Expected \")\" ");
+      shared_ptr<BlockDecl> block = (getBlock());
+
+      return make_shared<ForBlock>(decl, condition, stmt, block);
 
     } else if (match({TokenType::LEFT_BRACE})) {
       return getBlock();
 
     } else {
-      return make_unique<Statement>(std::move(statement()));
-      // unique_ptr< Expr>expr=std::move(expression());
-      // return make_unique<ExprStmt>(ExprStmt(std::move(expr)));
+      return make_shared<Statement>((statement()));
+      // shared_ptr< Expr>expr=(expression());
+      // return make_shared<ExprStmt>(ExprStmt((expr)));
     }
   }
 
@@ -286,7 +294,7 @@ class Parser {
     return false;
   }
 
-  unique_ptr<FuncDecl> getFunctionDecl() {
+  shared_ptr<FuncDecl> getFunctionDecl() {
     // func add(int a , int b){
     //  print(a)
     //  print (b)
@@ -298,14 +306,13 @@ class Parser {
     consume(TokenType::LEFT_PAREN, "Expected '('");
     // // consumeing arguments
     // vector<Parameter> params ;
-    unique_ptr<vector<Parameter>> params=make_unique<vector<Parameter>>();
+    shared_ptr<vector<Parameter>> params = make_shared<vector<Parameter>>();
     while (tokens[current].type != TokenType::RIGHT_PAREN) {
-
       if (tokens[current].type != TokenType::IDENTIFIER) {
         runtime_error("expected Identifier in function argument");
       }
 
-      Parameter param=Parameter(tokens[current++].lexeme);
+      Parameter param = Parameter(tokens[current++].lexeme);
       params->push_back(param);
 
       if (tokens[current].type == TokenType::COMMA) {
@@ -318,26 +325,24 @@ class Parser {
     }
 
     consume(TokenType::RIGHT_PAREN, "Expected ')'");
-    unique_ptr<BlockDecl> block = getBlock();
+    shared_ptr<BlockDecl> block = getBlock();
     cout << "out" << endl;
 
-    
-    return std::move(make_unique<FuncDecl>(functionName, std::move(params),
-                                           std::move(block)));
+    return (make_shared<FuncDecl>(functionName, (params), (block)));
   }
 
-  unique_ptr<BlockDecl> getBlock() {
+  shared_ptr<BlockDecl> getBlock() {
     consume(TokenType::LEFT_BRACE, "Expected '{'");
 
-    unique_ptr<vector<unique_ptr<Decl>>> decls =
-        make_unique<vector<unique_ptr<Decl>>>();
+    shared_ptr<vector<shared_ptr<Decl>>> decls =
+        make_shared<vector<shared_ptr<Decl>>>();
 
     while (tokens[current].type != TokenType::RIGHT_BRACE) {
-      unique_ptr<Decl> decl = std::move(declaration());
-      decls->push_back(std::move(decl));
+      shared_ptr<Decl> decl = (declaration());
+      decls->push_back((decl));
     }
 
     consume(TokenType::RIGHT_BRACE, "Expected '}'");
-    return make_unique<BlockDecl>(std::move(decls));
+    return make_shared<BlockDecl>((decls));
   }
 };

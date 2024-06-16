@@ -38,10 +38,10 @@ void Environment::assignValue(string key, Literal value, Environment* env) {
   }
 }
 
-std::unique_ptr<FuncDecl> Environment::getFunction(string key,
+std::shared_ptr<FuncDecl> Environment::getFunction(string key,
                                                    Environment* env) {
   if (env->functions.find(key) != env->functions.end()) {
-    return std::move(env->functions[key]);
+    return (env->functions[key]);
   } else if (env->parent == NULL) {
     throw runtime_error("varaible \"" + key + "\" undefined");
   } else {
@@ -49,8 +49,8 @@ std::unique_ptr<FuncDecl> Environment::getFunction(string key,
   }
 }
 
-void Environment::setFunction(string key, unique_ptr<FuncDecl> value) {
-  this->functions[key] = std::move(value);
+void Environment::setFunction(string key, shared_ptr<FuncDecl> value) {
+  this->functions[key] = (value);
   // cout<<"done "<<key<<endl;
 }
 

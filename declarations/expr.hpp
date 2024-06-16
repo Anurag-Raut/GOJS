@@ -16,12 +16,12 @@ class Expr {
 
 class BinaryExpr : public Expr {
  public:
-  std::unique_ptr<Expr> left;
-  std::unique_ptr<Expr> right;
+  std::shared_ptr<Expr> left;
+  std::shared_ptr<Expr> right;
   Token op;
 
-  BinaryExpr(std::unique_ptr<Expr> left, Token op,
-             std::unique_ptr<Expr> right) ;
+  BinaryExpr(std::shared_ptr<Expr> left, Token op,
+             std::shared_ptr<Expr> right) ;
   template <typename T>
   bool checkType(vector<Literal> l1) ;
 
@@ -30,10 +30,10 @@ class BinaryExpr : public Expr {
 
 class UnaryExpr : public Expr {
  public:
-  std::unique_ptr<Expr> right;
+  std::shared_ptr<Expr> right;
   Token op;
 
-  UnaryExpr(Token op, std::unique_ptr<Expr> right);
+  UnaryExpr(Token op, std::shared_ptr<Expr> right);
   
 
   Literal evaluate(Environment *env) override ;
@@ -60,8 +60,8 @@ public:
 
 class GroupingExpr : public Expr {
  public:
-  std::unique_ptr<Expr> expr;
-  GroupingExpr(std::unique_ptr<Expr> expr) ;
+  std::shared_ptr<Expr> expr;
+  GroupingExpr(std::shared_ptr<Expr> expr) ;
 
   Literal evaluate(Environment *env) override ;
 };
@@ -69,8 +69,8 @@ class GroupingExpr : public Expr {
 class CallExpr : public Expr {
     public:
     string identidier;
-    unique_ptr<vector<unique_ptr<Expr>>> args;
-    CallExpr(string identidier,unique_ptr<vector<unique_ptr<Expr>>> args);
+    shared_ptr<vector<shared_ptr<Expr>>> args;
+    CallExpr(string identidier,shared_ptr<vector<shared_ptr<Expr>>> args);
 
     Literal evaluate(Environment *env) override ;
 
