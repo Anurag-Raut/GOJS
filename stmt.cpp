@@ -5,19 +5,23 @@
 #include <memory>
 
 #include "declarations/token.hpp"
+#include "declarations/expr.hpp"
+#include "declarations/environment.hpp"
+#include "declarations/ReturnExpection.hpp"
 
 using namespace std;
 
-ExprStmt::ExprStmt(unique_ptr<Expr> expr) { this->expr = std::move(expr); }
+ExprStmt::ExprStmt(shared_ptr<Expr> expr) { this->expr = (expr); }
 
 void ExprStmt::evaluate(Environment *env) {
   Literal l = expr->evaluate(env);
   // l.printLiteral();
 }
 
-PrintStmt::PrintStmt(unique_ptr<Expr> expr) { this->expr = std::move(expr); }
+PrintStmt::PrintStmt(shared_ptr<Expr> expr) { this->expr = (expr); }
 
 void PrintStmt::evaluate(Environment *env) {
+  // cout<<"printin"<<endl;
   any value = expr->evaluate(env).value;
   if (value.type() == typeid(string)) {
     cout << any_cast<string>(value) << endl;
@@ -30,11 +34,28 @@ void PrintStmt::evaluate(Environment *env) {
   }
 }
 
-AssignStmt::AssignStmt(string variableName, unique_ptr<Expr> expr) {
-  this->expr = std::move(expr);
+AssignStmt::AssignStmt(string variableName, shared_ptr<Expr> expr) {
+  this->expr = (expr);
   this->variableName = variableName;
 }
 
 void AssignStmt::evaluate(Environment *env) {
-  env->assignValue(variableName, expr->evaluate(env), env);
+  // cout<<"huhhh"<<endl;
+    Literal l2=expr->evaluate(env);
+    // l2.printLiteral();
+    // cout<<"assigning now"<<endl;
+  env->assignValue(variableName, l2, env);
+      // cout<<"assigning done"<<endl;
+
 }
+
+ReturnStmt::ReturnStmt(shared_ptr<Expr> expr){
+  this->expr = (expr);
+}
+
+
+  void ReturnStmt::evaluate(Environment *env){
+    Literal l=expr->evaluate(env);
+    ReturnException r (l);
+    throw r;
+  }

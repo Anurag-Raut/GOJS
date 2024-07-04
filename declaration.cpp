@@ -1,34 +1,39 @@
 
 #include "declarations/declaration.hpp"
 
+#include <chrono>
+#include <ctime>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "stmt.hpp"
-#include "token.hpp"
+#include "declarations/ReturnExpection.hpp"
+#include "declarations/stmt.hpp"
+#include "declarations/token.hpp"
 
 using namespace std;
 
-Statement::Statement(unique_ptr<Stmt> stmt) { this->stmt = std::move(stmt); }
+Statement::Statement(shared_ptr<Stmt> stmt) { this->stmt = (stmt); }
 
 void Statement::execute(Environment *env) { stmt->evaluate(env); }
 
-VarDecl::VarDecl(string name, unique_ptr<Expr> value) {
+VarDecl::VarDecl(string name, shared_ptr<Expr> value) {
   this->name = name;
-  this->value = std::move(value);
+  this->value = (value);
 }
 
 void VarDecl::execute(Environment *env) {
-  // cout<<"doing var declartion"<<endl;
-  // Literal l1=value->evaluate(env);
+  // cout << "doing var declartion of " << name << " ";
+
+  Literal l1 = value->evaluate(env);
+  // cout << "received Litera for declaration of " << name << " is : ";
   // l1.printLiteral();
-  env->setVariable(name, value->evaluate(env));
+  env->setVariable(name, l1);
   // variables[name].printLiteral();
 }
 
-BlockDecl::BlockDecl(unique_ptr<vector<unique_ptr<Decl>>> decls) {
-  this->decls = std::move(decls);
+BlockDecl::BlockDecl(shared_ptr<vector<shared_ptr<Decl>>> decls) {
+  this->decls = (decls);
 }
 
 void BlockDecl::execute(Environment *env) {
@@ -39,33 +44,38 @@ void BlockDecl::execute(Environment *env) {
   }
 }
 
-IfDecl::IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock,
-               unique_ptr<BlockDecl> elseBlock) {
-  this->expr = std::move(expr);
-  this->ifBlock = std::move(ifBlock);
-  this->elseBlock = std::move(elseBlock);
+IfDecl::IfDecl(shared_ptr<Expr> expr, shared_ptr<BlockDecl> ifBlock,
+               shared_ptr<BlockDecl> elseBlock) {
+  this->expr = (expr);
+  this->ifBlock = (ifBlock);
+  this->elseBlock = (elseBlock);
 }
-IfDecl::IfDecl(unique_ptr<Expr> expr, unique_ptr<BlockDecl> ifBlock) {
-  this->expr = std::move(expr);
-  this->ifBlock = std::move(ifBlock);
+IfDecl::IfDecl(shared_ptr<Expr> expr, shared_ptr<BlockDecl> ifBlock) {
+  this->expr = (expr);
+  this->ifBlock = (ifBlock);
+  this->elseBlock = NULL;
 }
 
 void IfDecl::execute(Environment *env) {
   Literal ans = expr->evaluate(env);
+  // cout<<"if expr" ;
+  // ans.printLiteral();
   if (!ans.checkType<bool>()) {
     ifBlock->execute(env);
 
   } else if (ans.checkType<bool>() && any_cast<bool>(ans.value)) {
     ifBlock->execute(env);
 
-  } else {
+  } else if (elseBlock) {
+    // cout << "executing else" << endl;
     elseBlock->execute(env);
+    // cout << "done else" << endl;
   }
 }
 
-WhileBlock::WhileBlock(unique_ptr<Expr> expr, unique_ptr<BlockDecl> block) {
-  this->expr = std::move(expr);
-  this->block = std::move(block);
+WhileBlock::WhileBlock(shared_ptr<Expr> expr, shared_ptr<BlockDecl> block) {
+  this->expr = (expr);
+  this->block = (block);
 }
 
 void WhileBlock::execute(Environment *env) {
@@ -77,14 +87,75 @@ void WhileBlock::execute(Environment *env) {
   }
 }
 
-FuncDecl::FuncDecl(string name,
-                   unique_ptr<vector<unique_ptr<Parameter>>> parameters,
-                   unique_ptr<BlockDecl> block) {
-  this->name = name;
-  this->parameters = std::move(parameters);
-  this->block = std::move(block);
+ForBlock::ForBlock(shared_ptr<Decl> declaration, shared_ptr<Expr> condition,
+                   shared_ptr<Stmt> doStatement, shared_ptr<BlockDecl> block) {
+  this->declaration = declaration;
+  this->condition = condition;
+  this->doStatement = doStatement;
+  this->block = block;
 }
-void FuncDecl::execute(Environment *env) { block->execute(env); }
+
+void ForBlock::execute(Environment *env) {
+  Environment *childEnv = new Environment();
+  childEnv->parent = env;
+  declaration->execute(childEnv);
+
+  Literal ans = condition->evaluate(childEnv);
+
+  while (!ans.checkType<bool>() ||
+         ans.checkType<bool>() && any_cast<bool>(ans.value)) {
+    block->execute(childEnv);
+    doStatement->evaluate(childEnv);
+    ans = condition->evaluate(childEnv);
+  }
+}
+
+FuncDecl::FuncDecl(string name, shared_ptr<vector<Parameter>> parameters,
+                   shared_ptr<BlockDecl> block
+                   //  ,shared_ptr<vector<type_index>> returnTypes
+) {
+  this->name = name;
+  this->parameters = (parameters);
+  this->block = (block);
+}
+
+FuncDecl::FuncDecl(string name) {
+ this->name=name;
+}
+Literal FuncDecl::executeArgs(shared_ptr<vector<shared_ptr<Expr>>> args,
+                              Environment *env) {
+  // cout<<"staring function execution : "<<name<<endl;
+  if (this->name == "time") {
+    auto now = std::chrono::system_clock::now();
+    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+    auto value = now_ms.time_since_epoch().count();
+
+
+    return Literal((double)(value));
+  }
+  vector<Literal> lits;
+  Environment *childEnv = new Environment();
+  childEnv->parent = env;
+  for (int index = 0; index < args->size(); index++) {
+    // lits.push_back(arg->evaluate(env));
+    // cout<<"paramters "<<parameters->at(index).name<<endl;
+    childEnv->setVariable(parameters->at(index).name,
+                          args->at(index)->evaluate(childEnv));
+  }
+  try {
+    block->execute(childEnv);
+  } catch (ReturnException &v) {
+    // cout<<"recived exception ";
+    // v.value.printLiteral();
+    return v.value;
+  }
+
+  return Literal();
+}
+
+void FuncDecl::execute(Environment *env) {
+  env->setFunction(this->name, std::shared_ptr<FuncDecl>(this));
+}
 
 // getVariable(){
 

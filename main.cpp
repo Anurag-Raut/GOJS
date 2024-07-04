@@ -4,11 +4,32 @@
 #include <string>
 #include <vector>
 #include <set>
+#include<memory>
+#include "declarations/token.hpp"
+#include "declarations/environment.hpp"
+#include "declarations/expr.hpp"
+#include "declarations/stmt.hpp"
+#include "declarations/declaration.hpp"
+#include "expr.cpp"
+#include "stmt.cpp"
+
+
+#include "declarations/expr.hpp"
+#include "declarations/stmt.hpp"
+
+// #include "declarations/token.hpp"
+// #include "declaration.cpp"
+
+#include "declaration.cpp"
+#include "environment.cpp"
+
 #include "tokenizer.cpp"
+// #include "environment.cpp"
+
+
+
 #include "parser.cpp"
-#include "environment.hpp"
 #include "interpreter.cpp"
-#include "declaration.hpp"
 // #include "globals.hpp"
 
 using namespace std;
@@ -16,12 +37,13 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
+  // cout<<"HELLO";
   if (argc < 2) {
     cerr << "ERORR: Pass the filename to compile" << endl;
     return 0;
   }
   string filename = argv[1];
-  cout << "received filename : " << filename << endl;
+  // cout << "received filename : " << filename << endl;
   string fileinput, line_text;
 
   ifstream MyReadFile(filename);
@@ -32,17 +54,17 @@ int main(int argc, char *argv[]) {
 
   MyReadFile.close();
 
-  cout << fileinput << endl;
+  // cout << fileinput << endl;
   Tokenizer tokenizer(fileinput);
-  tokenizer.display();
+  // tokenizer.display();
   Parser parser(tokenizer.tokens);
-  vector<unique_ptr<Decl>> statements = parser.parse();
+  vector<shared_ptr<Decl>> declarations = parser.parse();
   
   // cout<<"parsing done"<<endl;
 
   
 
-  Interpreter interpreter(std::move(statements));
+  Interpreter interpreter((declarations));
   interpreter.evaluate();
 
   

@@ -5,7 +5,7 @@
 #include <variant>
 #include <vector>
 
-#include "token.hpp"
+#include "declarations/token.hpp"
 #include "utils.hpp"
 
 using namespace std;

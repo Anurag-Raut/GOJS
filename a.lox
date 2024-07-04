@@ -1,25 +1,5 @@
-
-
-    var a ="anurag"
-    var b= "anurag"
-  
-    if(a==b){
-        a="changed"
-     
-        print("same")
-    }
-    else{
-        print("different")
-    }
-
-  
-
-    var num=10
-    
-
-    while(num>0){
-        print(num)
-        num=num-1
-    }
-  
-
+var i=0
+while (i<10) {
+    print(i)
+    i=i+1
+}
