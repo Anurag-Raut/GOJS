@@ -22,6 +22,7 @@ class Parser {
       // cout << " current: " << current << " token: " << tokens[current].lexeme
       //      << endl;
     }
+   
     // cout<<"size"<<declarations.size()<<endl;
 
     return declarations;
@@ -321,12 +322,12 @@ class Parser {
         runtime_error("expected ',' or ') in function argument");
       }
 
-      cout << current << " curren " << endl;
+      // cout << current << " curren " << endl;
     }
 
     consume(TokenType::RIGHT_PAREN, "Expected ')'");
     shared_ptr<BlockDecl> block = getBlock();
-    cout << "out" << endl;
+    // cout << "out" << endl;
 
     return (make_shared<FuncDecl>(functionName, (params), (block)));
   }

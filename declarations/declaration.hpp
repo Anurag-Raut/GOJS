@@ -108,6 +108,7 @@ class FuncDecl : public Decl {
 
   FuncDecl(string name, shared_ptr<vector<Parameter>> parameters,
            shared_ptr<BlockDecl> block);
+    FuncDecl(string name);
   void execute(Environment *env) override;
 
   Literal executeArgs(shared_ptr<vector<shared_ptr<Expr>>>args,Environment *env) ;

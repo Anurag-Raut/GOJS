@@ -25,14 +25,15 @@ class Interpreter {
 
     //    Enviliteral.printLiteral();
     Environment *globalEnv = new Environment();
-
+     shared_ptr<FuncDecl> timedecl=make_shared<FuncDecl>("time");
+    
+    globalEnv->setFunction("time",timedecl);
   
     for (auto &decl : declarations) {
       decl->execute(globalEnv);
       // cout << "hello" << endl;
     }
 
-    // delete globalEnv;
 
     // }
   }

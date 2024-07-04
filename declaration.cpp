@@ -1,6 +1,8 @@
 
 #include "declarations/declaration.hpp"
 
+#include <chrono>
+#include <ctime>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -65,9 +67,9 @@ void IfDecl::execute(Environment *env) {
     ifBlock->execute(env);
 
   } else if (elseBlock) {
-    cout << "executing else" << endl;
+    // cout << "executing else" << endl;
     elseBlock->execute(env);
-    cout << "done else" << endl;
+    // cout << "done else" << endl;
   }
 }
 
@@ -116,10 +118,21 @@ FuncDecl::FuncDecl(string name, shared_ptr<vector<Parameter>> parameters,
   this->parameters = (parameters);
   this->block = (block);
 }
+
+FuncDecl::FuncDecl(string name) {
+ this->name=name;
+}
 Literal FuncDecl::executeArgs(shared_ptr<vector<shared_ptr<Expr>>> args,
                               Environment *env) {
   // cout<<"staring function execution : "<<name<<endl;
+  if (this->name == "time") {
+    auto now = std::chrono::system_clock::now();
+    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
+    auto value = now_ms.time_since_epoch().count();
 
+
+    return Literal((double)(value));
+  }
   vector<Literal> lits;
   Environment *childEnv = new Environment();
   childEnv->parent = env;

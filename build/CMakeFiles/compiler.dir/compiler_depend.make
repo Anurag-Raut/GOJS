@@ -247,6 +247,10 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
   ../stmt.cpp \
   ../declarations/ReturnExpection.hpp \
   ../declaration.cpp \
+  /usr/include/c++/11/chrono \
+  /usr/include/c++/11/ratio \
+  /usr/include/c++/11/limits \
+  /usr/include/c++/11/ctime \
   ../environment.cpp \
   ../tokenizer.cpp \
   ../utils.hpp \
@@ -257,6 +261,10 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 ../interpreter.cpp:
 
 ../parser.cpp:
+
+/usr/include/c++/11/limits:
+
+/usr/include/c++/11/ratio:
 
 ../declarations/ReturnExpection.hpp:
 
@@ -331,6 +339,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/cerrno:
 
 /usr/include/stdio.h:
+
+/usr/include/c++/11/chrono:
 
 /usr/include/c++/11/cstdio:
 
@@ -569,6 +579,8 @@ CMakeFiles/compiler.dir/main.cpp.o: ../main.cpp \
 /usr/include/c++/11/tuple:
 
 /usr/include/c++/11/type_traits:
+
+/usr/include/c++/11/ctime:
 
 /usr/include/c++/11/bits/codecvt.h:
 

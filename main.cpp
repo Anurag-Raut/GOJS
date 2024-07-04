@@ -37,12 +37,13 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
+  // cout<<"HELLO";
   if (argc < 2) {
     cerr << "ERORR: Pass the filename to compile" << endl;
     return 0;
   }
   string filename = argv[1];
-  cout << "received filename : " << filename << endl;
+  // cout << "received filename : " << filename << endl;
   string fileinput, line_text;
 
   ifstream MyReadFile(filename);
@@ -53,17 +54,17 @@ int main(int argc, char *argv[]) {
 
   MyReadFile.close();
 
-  cout << fileinput << endl;
+  // cout << fileinput << endl;
   Tokenizer tokenizer(fileinput);
-  tokenizer.display();
+  // tokenizer.display();
   Parser parser(tokenizer.tokens);
-  vector<shared_ptr<Decl>> statements = parser.parse();
+  vector<shared_ptr<Decl>> declarations = parser.parse();
   
-  cout<<"parsing done"<<endl;
+  // cout<<"parsing done"<<endl;
 
   
 
-  Interpreter interpreter((statements));
+  Interpreter interpreter((declarations));
   interpreter.evaluate();
 
   
