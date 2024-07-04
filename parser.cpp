@@ -279,7 +279,8 @@ class Parser {
     } else if (match({TokenType::LEFT_BRACE})) {
       return getBlock();
 
-    } else {
+    }
+    else {
       return make_shared<Statement>((statement()));
       // shared_ptr< Expr>expr=(expression());
       // return make_shared<ExprStmt>(ExprStmt((expr)));

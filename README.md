@@ -5,7 +5,7 @@ GOJS is an interpreter built using C++ and CMake. It features a unique syntax th
 - [Installation](#installation)  
 - [Usage](#usage)  
 - [Syntax](#syntax)  
-- [Contact] 
+- [Contact](#contact)
 
 ## Installation
 Prerequisites
@@ -62,28 +62,34 @@ function add(a, b) {
 
 let result = add(5, 3);
 ```
-Control Flow
-go
-Copy code
+**Control Flow**  
+```
+var x = 10
+var y = 20 
+
 if (x > y) {
-    print("x is greater than y");
+    print("x is greater than y")
 } else {
-    print("x is not greater than y");
+    print("x is not greater than y")
 }
-Loops
-go
-Copy code
-for (let i = 0; i < 10; i++) {
+```
+
+**Loops**
+- For Loop
+```
+for (var i = 0; i < 10; i++) {
     print(i);
 }
-Contributing
-Contributions are welcome! Please fork the repository and submit a pull request with your changes. For major changes, please open an issue first to discuss what you would like to change.
+```
 
-Fork the repository
-Create your feature branch (git checkout -b feature/AmazingFeature)
-Commit your changes (git commit -m 'Add some AmazingFeature')
-Push to the branch (git push origin feature/AmazingFeature)
-Open a pull request
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
+- While Loop
+```
+var i=0
+while (i<10) {
+    print(i)
+    i=i+1
+}
+```
 
+## Contact
+For any questions or feedback, please contact anurag.raut.86@gmail.com.
